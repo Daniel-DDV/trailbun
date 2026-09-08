@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "incomplete",
+  "measured_at": "2026-09-08T21:44:20.403280+00:00",
+  "host": "codex",
+  "host_version": "codex-cli 0.153.4",
+  "requested_model": "gpt-6-astra",
+  "platform": "Windows-11-10.0.22631-SP0",
+  "trailbun_version": "0.2.0",
+  "fixture": "<WORKTREE>",
+  "fixture_setup": "Generated project-local hooks and skills committed before clean task start; Trailbun setup performs no direct global configuration writes",
+  "trust_mode": "Reviewed one-off hook trust bypass requested; malformed project override left trust unset and Codex automatically persisted fixture project trust",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.EXE",
+    "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "-a",
+    "never",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--json",
+    "-c",
+    "windows.sandbox=\"elevated\"",
+    "-c",
+    "projects.\"<WORKTREE>\".trust_level=\"trusted\"",
+    "--model",
+    "gpt-6-astra",
+    "--sandbox",
+    "workspace-write",
+    "--dangerously-bypass-hook-trust",
+    "-C",
+    "<WORKTREE>",
+    "-"
+  ],
+  "timeout_seconds": 180,
+  "timed_out": false,
+  "exit_code": 0,
+  "elapsed_seconds": 11.171,
+  "sentinel_before_sha256": "ec686ddbe523c5932ef6d5c2910dde83709642f60e8034d36f616f846b1448e1",
+  "sentinel_after_sha256": "ec686ddbe523c5932ef6d5c2910dde83709642f60e8034d36f616f846b1448e1",
+  "native_failed_patch_events": [],
+  "hook_denial": null,
+  "bindings": {},
+  "stream": {
+    "path": "native-codex.stream.jsonl",
+    "sha256": "a6fcb144c6a3ebdca3f9894f332892179f60624f01970508270d39462e8c7d63"
+  },
+  "stderr": {
+    "path": "native-codex.stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "script_sha256": "9b988d2b00de4c0828cf5e55b349396888d6d3f98e84966c35556112063a4e7b",
+  "doctor": {
+    "schema_version": 1,
+    "status": "incomplete",
+    "host": "codex",
+    "host_version": "codex-cli 0.153.4",
+    "configured": true,
+    "invoked": false,
+    "invoked_events": [],
+    "invocation_host_version": "unverified",
+    "disabled": false,
+    "enforced": false,
+    "trust": "Host-managed; review in /hooks",
+    "coverage": [
+      "apply_patch targets and move ends"
+    ],
+    "limits": [
+      "No native rejected-write proof recorded by doctor",
+      "Unknown shell and MCP mutations are not blocked",
+      "Hook timeout or failure can bypass intervention"
+    ]
+  },
+  "inspection_errors": [],
+  "limits": [
+    "One isolated native apply_patch attempt only",
+    "No universal shell/MCP enforcement, compaction, resume or cross-platform claim",
+    "A model's natural-language refusal is not a native rejected-write receipt"
+  ],
+  "sources": [
+    "https://learn.chatgpt.com/docs/hooks",
+    "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/exec/src/exec_events.rs"
+  ],
+  "metadata_correction": {
+    "recorded_at": "2026-09-08T22:05:35.973292+00:00",
+    "original_values": {
+      "fixture_setup": "Generated project-local hooks and skills committed before clean task start; no global configuration changes",
+      "trust_mode": "Reviewed one-off hook trust bypass plus exact-fixture project trust override; neither persisted"
+    },
+    "reason": "Subsequent read-only inspection found Codex had persisted the fixture project trust in its user configuration. The tagged thread/start handler auto-trusts writable projects lacking an effective explicit trust setting, including ephemeral runs. The old dotted-key CLI override was incorrectly encoded. No pre-run user-config hash was captured, so these receipts cannot claim global configuration invariance. Raw stream, stderr, and script artifacts are unchanged.",
+    "source": "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/app-server/src/request_processors/thread_processor.rs#L1334"
+  }
+}

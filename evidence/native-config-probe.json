@@ -1,0 +1,70 @@
+{
+  "status": "ok",
+  "fixture": "<WORKTREE>",
+  "model_calls": 0,
+  "turn_start_sent": false,
+  "user_config_before": {
+    "exists": true,
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "user_config_after": {
+    "exists": true,
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "user_config_unchanged": true,
+  "project_layers": [
+    {
+      "name": {
+        "type": "sessionFlags"
+      },
+      "version": "sha256:196a6e76a2a510fc8254045557f4b436cde45f461116f7b4b3449129c536764f",
+      "config": {
+        "projects": {
+          "<WORKTREE>": {
+            "trust_level": "trusted"
+          }
+        },
+        "windows": {
+          "sandbox": "elevated"
+        }
+      }
+    },
+    {
+      "name": {
+        "type": "project",
+        "dotCodexFolder": "<WORKTREE>\\.codex"
+      },
+      "version": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "config": {}
+    }
+  ],
+  "hook_count": 4,
+  "hook_sources": [
+    {
+      "event": "preToolUse",
+      "source": "<WORKTREE>\\.codex\\hooks.json"
+    },
+    {
+      "event": "postToolUse",
+      "source": "<WORKTREE>\\.codex\\hooks.json"
+    },
+    {
+      "event": "sessionStart",
+      "source": "<WORKTREE>\\.codex\\hooks.json"
+    },
+    {
+      "event": "stop",
+      "source": "<WORKTREE>\\.codex\\hooks.json"
+    }
+  ],
+  "hook_notifications": [],
+  "thread_start_error": null,
+  "state_readable": true,
+  "limits": [
+    "Discovery and explicit trust only; no native tool enforcement claim"
+  ],
+  "sources": [
+    "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/app-server/src/request_processors/thread_processor.rs#L1334",
+    "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/utils/cli/src/config_override.rs#L44"
+  ]
+}

@@ -3,3 +3,7 @@ recursive-include checks *.py
 recursive-include tests *.py
 recursive-include benchmarks *.py
 recursive-include scripts *.py
+include evidence/native-codex-corrected-trust.json
+include evidence/native-codex-corrected-trust.stderr.txt
+include evidence/native-codex-corrected-trust.stream.jsonl
+include evidence/native-codex-corrected-trust.script.py

@@ -1,0 +1,6 @@
+2026-09-08T22:06:12.315911Z ERROR codex_core::tools::router: error=Command blocked by PreToolUse hook: Trailbun scope violation: protected/outside.txt. Command: *** Begin Patch
+*** Update File: protected/outside.txt
+@@
+-TRAILBUN_SENTINEL_UNCHANGED
++TRAILBUN_SENTINEL_CHANGED
+*** End Patch

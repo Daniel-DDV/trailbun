@@ -1,0 +1,10 @@
+{"type":"thread.started","thread_id":"01a082fa-7f1a-7c60-bf21-1fa32c7f2814"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_2","type":"error","message":"Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."}}
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"I’ll run the binding command first, then make the single patch attempt if binding succeeds.\n"}}
+{"type":"item.started","item":{"id":"item_4","type":"command_execution","command":"\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe' -m trailbun resume --host codex --session \"'$env:CODEX_THREAD_ID --json'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_4","type":"command_execution","command":"\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe' -m trailbun resume --host codex --session \"'$env:CODEX_THREAD_ID --json'","aggregated_output":"No Python at '\"<HOME>\\AppData\\Roaming\\uv\\python\\cpython-3.12.11-windows-x86_64-none\\python.exe'\r\n","exit_code":1,"status":"failed"}}
+{"type":"item.completed","item":{"id":"item_5","type":"agent_message","text":"Binding failed: the specified virtual environment’s Python executable is missing. No patch was attempted; the smoke test remains incomplete."}}
+{"type":"turn.completed","usage":{"input_tokens":43167,"cached_input_tokens":33024,"cache_write_input_tokens":0,"output_tokens":117,"reasoning_output_tokens":0}}
