@@ -36,8 +36,8 @@ uvx --from git+https://github.com/Daniel-DDV/trailbun@v0.2.0 trailbun demo --out
 ```
 
 The output is `trailbun-demo/demo.json`. This is a **deterministic demonstration**,
-not a measured before/after claim about an AI agent. From this checkout before the
-release tag is published, use `uv run trailbun demo`.
+not a measured before/after claim about an AI agent. From a source checkout,
+use `uv run trailbun demo`.
 
 ![A recorded Trailbun demo: save the task, catch the detour, restore context, and verify the result.](assets/demo.gif)
 
@@ -75,8 +75,8 @@ step. See [uv's tool installation documentation](https://docs.astral.sh/uv/guide
 For a repository you want to use with Claude Code or Codex:
 
 ```sh
-trailbun setup --host claude --project .
-# Or: trailbun setup --host codex --project .
+trailbun setup --host codex --project .
+# Or: trailbun setup --host claude --project .
 ```
 
 Review the generated configuration, then follow [task and session setup](docs/USAGE.md).
@@ -85,11 +85,11 @@ bind to the task with its host and session ID; an old task on disk does not
 silently activate a guard in a new chat.
 
 ```sh
-trailbun doctor --host claude --project .
-trailbun uninstall --host claude --project .
+trailbun doctor --host codex --project .
+trailbun uninstall --host codex --project .
 ```
 
-Use `--host codex` for Codex. Remove project integration before removing the CLI
+Use `--host claude` for Claude Code. Remove project integration before removing the CLI
 with `uv tool uninstall trailbun`. Uninstall leaves task evidence available.
 
 ## Commands
@@ -115,15 +115,19 @@ named version, OS and action path.
 | Surface | Current evidence boundary |
 | --- | --- |
 | Python core | Deterministic regression fixtures; current run results are in [evidence](docs/EVIDENCE.md). |
-| Claude Code | Native adapter for declared edit paths; live host receipts pending publication. |
-| Codex | Native adapter for declared patch paths; live host receipts pending publication. |
+| Codex | 0.153.4 on Windows: a permitted native patch succeeds, an out-of-scope patch is rejected, and saved context returns after manual compaction. [Receipts](docs/EVIDENCE.md#native-host-coverage). |
+| Claude Code | Adapter and generated-command fixtures pass; live behavior remains unverified because authentication was unavailable. |
 | Shell, MCP and other write paths | No universal pre-write coverage; workspace checks can observe relevant changes after they happen. |
 | Grok Build | Deferred; Claude compatibility does not establish working reinjection or blocking. |
-| Agent effectiveness | The paired study is pending; no speed, cost or drift-reduction percentage is claimed. |
+| Controlled workflow study | All 12 Codex runs pass the functional checks; all 6 Trailbun runs retain current verification. Claude runs remain unrun. [Results and limits](evidence/study-final/SUMMARY.md). |
 
 The [evidence register](docs/EVIDENCE.md) separates pending claims, deterministic
 checks, live native behavior and agent study results. The [research notes](docs/RESEARCH.md)
 explain why these are different questions.
+
+These small instructed tasks do not establish natural context-rot prevention or
+a general speed, cost or drift-reduction percentage. Version 0.2.0 is an early
+preview; live Claude behavior and automatic compaction remain unverified.
 
 ## Limits worth knowing
 

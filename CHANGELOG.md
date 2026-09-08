@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — Trailbun
+## 0.2.0 — Trailbun preview
 
 The evidence-first handbook becomes an executable task workflow: **Trailbun —
 Keep your agent on the trail.** Existing laws, receipt templates and scanner
@@ -16,6 +16,8 @@ remain available.
 - Ship an installable Python CLI, three bundled skills, regression tests,
   cross-platform CI, an isolated demo and reproducible measurement scripts.
 - Add original rabbit artwork, terminal demo and source-grounded research notes.
+- Retain live Codex patch-rejection and manual-compaction receipts, twelve
+  controlled Codex workflow runs, and explicit gaps for unauthenticated Claude.
 - Make scanner read failures and empty inputs explicit. Its JSON output now has
   a versioned result envelope; `exit 2` matches remain heuristic candidates.
 

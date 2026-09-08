@@ -55,9 +55,16 @@ verification receipts and bounded diagnosis. It adds explicit project-local
 Claude Code and Codex integration, an isolated demonstration and the Trailbun
 rabbit identity.
 
-Include links to the exact release validation and host receipts. State any
-unverified platforms or incomplete study runs directly. Do not describe a
-planned matrix as completed test coverage.
+On Windows with Codex 0.153.4, retained native receipts confirm a permitted
+patch, a rejected out-of-scope patch and restored checkpoint context after
+manual compaction. All twelve controlled Codex runs pass their functional
+checks; the [study's prompt-sensitive artifact score](../evidence/study-final/SUMMARY.md)
+does not establish an effectiveness advantage.
+
+This first preview leaves live Claude behavior and automatic compaction
+unverified. The twelve Claude study cells could not run without authentication.
+See the [validation and receipts](EVIDENCE.md) and the
+[0.2.0 release](https://github.com/Daniel-DDV/trailbun/releases/tag/v0.2.0).
 
 ## Assets and follow-through
 
