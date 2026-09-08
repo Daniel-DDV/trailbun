@@ -13,7 +13,7 @@ def test_contract_defaults_and_digest_are_deterministic(contract):
     assert "timeout_seconds" not in contract["checks"][0]
 
 
-@pytest.mark.parametrize("path", ["../src", "src/../secret", ".git/config", "src/*", "C:/outside", "/outside", ""])
+@pytest.mark.parametrize("path", ["../src", "src/../secret", ".git/config", ".trailbun/state.json", "src/*", "C:/outside", "/outside", ""])
 def test_contract_rejects_ambiguous_or_outside_scopes(contract, path):
     contract["allowed_paths"] = [path]
     with pytest.raises(ValueError):

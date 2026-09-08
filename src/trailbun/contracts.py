@@ -17,7 +17,7 @@ def path(value):
     parts = PurePosixPath(value).parts
     if (value.startswith("/") or re.match(r"^[A-Za-z]:", value)
             or ".." in parts or any(c in value for c in "*?")
-            or (parts and parts[0].lower() == ".git")):
+            or (parts and parts[0].lower() in {".git", ".trailbun"})):
         raise ValueError(f"Path must be a repository-relative file or directory: {value!r}")
     return str(PurePosixPath(value))
 

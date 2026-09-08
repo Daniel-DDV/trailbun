@@ -10,13 +10,13 @@ from pathlib import Path
 from . import contracts
 
 
-def run(root, *args):
+def run(root, *args, allowed_codes=(0,), input_data=None):
     try:
         result = subprocess.run(["git", "--no-optional-locks", "-C", str(root), *args],
-                                capture_output=True, timeout=15)
+                                capture_output=True, timeout=15, input=input_data)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise RuntimeError(f"Git inspection failed: {exc}") from exc
-    if result.returncode:
+    if result.returncode not in allowed_codes:
         raise RuntimeError(result.stderr.decode("utf-8", "replace").strip() or "Git inspection failed")
     return result.stdout
 
@@ -35,6 +35,17 @@ def require_baseline(root, baseline):
 
 def clean(root):
     return not run(root, "status", "--porcelain=v1", "-z", "--untracked-files=all")
+
+
+def is_ignored(root, name):
+    fields = run(root, "check-ignore", "--no-index", "--verbose", "--non-matching", "-z",
+                 "--stdin", allowed_codes=(0, 1), input_data=os.fsencode(name) + b"\0").split(b"\0")
+    return len(fields) >= 4 and bool(fields[2]) and not fields[2].startswith(b"!")
+
+
+def runtime_name(name):
+    value = os.path.normcase(name).replace("\\", "/")
+    return value == ".trailbun" or value.startswith(".trailbun/")
 
 
 def _names(data):
@@ -57,6 +68,8 @@ def _diff_names(data):
 
 def changed_paths(root, baseline, watch_ignored=(), baseline_watched=None):
     root = repo_root(root)
+    from . import store
+    store.directory(root)
     require_baseline(root, baseline)
     paths = set()
     # Separate layers retain staged changes even if the worktree reverted them.
@@ -67,7 +80,7 @@ def changed_paths(root, baseline, watch_ignored=(), baseline_watched=None):
     before = {name: digest for name, digest in (baseline_watched or {}).items()
               if any(_scope_matches(name, scope) for scope in watch_ignored)}
     paths.update(name for name in set(watched) | set(before) if watched.get(name) != before.get(name))
-    return sorted(paths)
+    return sorted(name for name in paths if not runtime_name(name))
 
 
 def _scope_matches(value, scope):
@@ -88,7 +101,8 @@ def path_allowed(root, value, allowed_paths):
         if not matching:
             return False
         metadata = Path(os.fsdecode(run(root, "rev-parse", "--absolute-git-dir").rstrip(b"\r\n"))).resolve()
-        if target == metadata or target.is_relative_to(metadata):
+        runtime = (root / ".trailbun").resolve()
+        if target == metadata or target.is_relative_to(metadata) or target == runtime or target.is_relative_to(runtime):
             return False
         for scope in matching:
             scope_target = (root / scope).resolve()
@@ -124,11 +138,13 @@ def watched_files(root, watch_ignored):
         return {}
     ignored = _names(run(root, "ls-files", "--others", "--ignored", "--exclude-standard", "-z"))
     return {name: _file_digest(root, name) for name in ignored
-            if any(_scope_matches(name, scope) for scope in watch_ignored)}
+            if not runtime_name(name) and any(_scope_matches(name, scope) for scope in watch_ignored)}
 
 
 def artifact(root, watch_ignored=()):
     root = repo_root(root)
+    from . import store
+    store.directory(root)
     index = run(root, "ls-files", "--stage", "-z")
     if any(record.startswith(b"160000 ") for record in index.split(b"\0")):
         raise RuntimeError("Submodule contents are unsupported; artifact inspection is incomplete")
@@ -136,7 +152,7 @@ def artifact(root, watch_ignored=()):
     paths.update(_names(run(root, "ls-files", "--others", "--exclude-standard", "-z")))
     watched = watched_files(root, watch_ignored)
     paths.update(watched)
-    files = {name: _file_digest(root, name) for name in sorted(paths)}
+    files = {name: _file_digest(root, name) for name in sorted(paths) if not runtime_name(name)}
     result = {"head": head(root), "index": hashlib.sha256(index).hexdigest(), "files": files, "watched": watched}
     result["fingerprint"] = hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
     return result

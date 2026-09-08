@@ -191,3 +191,97 @@ def test_state_update_is_atomic_on_exception_and_worktree_local(repo, contract, 
     assert store.directory(repo) != store.directory(other)
     with pytest.raises(RuntimeError, match="active"):
         store.load(other)
+
+
+def test_runtime_bootstrap_is_owned_ignored_and_idempotent(repo, contract):
+    exclude = repo / ".git/info/exclude"
+    original = exclude.read_bytes()
+    location = store.bootstrap(repo)
+    assert location == repo / ".trailbun"
+    assert (location / "owner.json").is_file()
+    assert exclude.read_bytes().startswith(original)
+    once = exclude.read_bytes()
+    store.bootstrap(repo)
+    assert exclude.read_bytes() == once
+    assert git.clean(repo)
+    engine.start(repo, contract)
+
+
+def test_unowned_runtime_conflict_leaves_user_files_and_excludes_untouched(repo):
+    location = repo / ".trailbun"
+    location.mkdir()
+    owned = location / "personal.txt"
+    owned.write_text("User-owned data")
+    exclude = repo / ".git/info/exclude"
+    original = exclude.read_bytes()
+    with pytest.raises(RuntimeError, match="ownership"):
+        store.bootstrap(repo)
+    assert owned.read_text() == "User-owned data"
+    assert exclude.read_bytes() == original
+
+
+def test_tracked_runtime_is_rejected_even_with_an_owner_marker(repo):
+    location = store.bootstrap(repo)
+    git_command(repo, "add", "-f", ".trailbun/owner.json")
+    with pytest.raises(RuntimeError, match="tracked"):
+        store.bootstrap(repo)
+
+
+def test_deleted_tracked_runtime_is_rejected_before_bootstrap_mutations(repo):
+    location = repo / ".trailbun"
+    location.mkdir()
+    (location / "user-file.txt").write_text("User-owned tracked content")
+    git_command(repo, "add", ".trailbun/user-file.txt")
+    git_command(repo, "commit", "-qm", "Track preexisting directory")
+    (location / "user-file.txt").unlink()
+    location.rmdir()
+    exclude = repo / ".git/info/exclude"
+    before = exclude.read_bytes()
+    with pytest.raises(RuntimeError, match="tracked"):
+        store.bootstrap(repo)
+    assert not location.exists()
+    assert exclude.read_bytes() == before
+
+
+def test_existing_legacy_state_is_preserved_and_explicitly_reported(repo):
+    legacy = repo / ".git/trailbun/state.json"
+    legacy.parent.mkdir()
+    legacy.write_text('{"schema_version":1,"retained":true}')
+    before = legacy.read_bytes()
+    with pytest.raises(RuntimeError, match="Legacy"):
+        store.bootstrap(repo)
+    assert legacy.read_bytes() == before
+    assert not (repo / ".trailbun").exists()
+
+
+def test_runtime_never_stales_artifact_even_when_all_ignored_files_are_watched(repo, contract):
+    contract["watch_ignored"] = ["."]
+    engine.start(repo, contract)
+    before = git.artifact(repo, ["."])
+    engine.checkpoint(repo, {"summary": "Saved progress"})
+    after = git.artifact(repo, ["."])
+    assert before["fingerprint"] == after["fingerprint"]
+    assert not any(name == ".trailbun" or name.startswith(".trailbun/") for name in after["files"])
+    assert engine.check(repo)["changed_paths"] == []
+
+
+def test_runtime_alias_is_never_a_permitted_source_write(repo, contract):
+    location = store.bootstrap(repo)
+    alias = repo / "runtime-alias"
+    try:
+        alias.symlink_to(location, target_is_directory=True)
+    except OSError:
+        pytest.skip("Symlink creation is unavailable")
+    assert not git.path_allowed(repo, "runtime-alias/state.json", ["."])
+
+
+def test_bootstrap_error_is_actionable_when_git_ignore_cannot_be_initialized(repo, monkeypatch):
+    original = type(repo).open
+    def denied(path, *args, **kwargs):
+        if path.name == "exclude" and args and ("a" in args[0] or "w" in args[0]):
+            raise PermissionError("Protected Git metadata")
+        return original(path, *args, **kwargs)
+    monkeypatch.setattr(type(repo), "open", denied)
+    with pytest.raises(RuntimeError, match="outside"):
+        store.bootstrap(repo)
+    assert not (repo / ".trailbun").exists()
