@@ -32,9 +32,15 @@ trailbun check --project .
 ```
 
 `start` refuses a dirty worktree. Commit or isolate existing work yourself.
+Run initial setup/start from your own terminal: it bootstraps an owned
+`.trailbun` runtime directory and its exact local Git exclude entry. Later
+agent commands can update this state inside the normal workspace sandbox.
+On Windows, initialization also preserves the initializing user's inheritable
+Modify access on that new runtime directory. It does not change project-wide
+or system permissions.
 Paths are repository-relative literal files or directories, with no wildcards.
 `.` permits the project tree; use narrower paths when the task permits it.
-Git metadata and paths escaping the project are excluded. Submodules and
+Git metadata, Trailbun runtime data and paths escaping the project are excluded. Submodules and
 unsupported artifact types produce an incomplete result.
 
 Checks are argument arrays executed in the repository root, without an implicit
@@ -150,10 +156,12 @@ Task state and receipts remain available after uninstall.
 
 ## Storage and limits
 
-Find the runtime directory with `git rev-parse --git-path trailbun`. It contains
+The project-local `.trailbun` runtime directory contains
 `state.json`, immutable receipt files, installation manifests, minimal hook
 invocation records and archived task states. Linked worktrees have separate task
-state. Task-state writes use an atomic replacement and a lock; busy or corrupt state is an
+state. Its exact local exclude entry is retained with the evidence after
+uninstall. Existing unowned runtime directories are refused. Task-state writes
+use an atomic replacement and a lock; busy or corrupt state is an
 explicit error. State has a 1 MiB bound.
 
 Ignored files are excluded unless listed in the contract's `watch_ignored`.
@@ -173,3 +181,23 @@ Native hooks use their host's JSON protocol and exit separately.
 Protocol references: [Codex hooks](https://learn.chatgpt.com/docs/hooks),
 [Claude Code hooks](https://code.claude.com/docs/en/hooks),
 [Python subprocess](https://docs.python.org/3/library/subprocess.html).
+
+The runtime deliberately lives outside `.git`: Codex's Windows workspace
+sandbox protects Git metadata and cannot reopen a writable child directory
+inside it. See the [validated design correction](IMPLEMENTATION.md#validated-design-correction).
+
+## Windows environment checks
+
+Before a real task, confirm that the host can run the installed interpreter and
+`trailbun --version`. A virtual environment still depends on its base Python.
+In the recorded validation, an environment backed by a private uv-managed
+Python failed inside the sandbox; a separate environment based on the existing
+system Python resolved that interpreter error. Choose an interpreter the host
+can read rather than broadening filesystem permissions.
+
+The benchmark runner explicitly selects the existing elevated Windows sandbox
+when ignoring user configuration. This is a process-local setting; it does not
+modify `~/.codex/config.toml`. Normal interactive setup follows the
+[official Windows sandbox instructions](https://learn.chatgpt.com/docs/windows/windows-sandbox).
+The [evidence register](EVIDENCE.md) records interpreter, ACL and hook-discovery
+failures separately; a successful CLI invocation alone is not native protection.

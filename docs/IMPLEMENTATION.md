@@ -26,8 +26,8 @@ features. Keep commits small and scope them to one behavior.
 - Commands: start, amend, checkpoint, resume, check, verify, diagnose, doctor,
   setup, uninstall, demo. JSON output is versioned; 0=ok, 1=violation,
   2=incomplete/error. Native hooks translate these outcomes to host JSON.
-- One active task per worktree; runtime data lives at `git rev-parse --git-path
-  trailbun`. Start requires a clean worktree. Never automatically stash/reset.
+- One active task per worktree; runtime data lives in an owned, locally ignored
+  `.trailbun` directory. Start requires a clean worktree. Never automatically stash/reset.
 - Contract: goal, exclusions, allowed file/directory paths, acceptance checks,
   and an optional explicitly declared expected-red check. Amend retains baseline.
 - Check staged/unstaged/committed/untracked paths; watched ignored paths are
@@ -58,3 +58,13 @@ passing after the checked artifact changes. Both require regression fixtures.
 - https://setuptools.pypa.io/en/stable/userguide/package_discovery.html
 - https://www.trychroma.com/research/context-rot
 - https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+
+## Validated design correction
+
+The initial design placed runtime state below `.git`. Live Windows validation
+and the tagged Codex source showed that its normal workspace sandbox protects
+Git metadata and rejects writable child exceptions. Runtime therefore moves to
+an owned `.trailbun` directory per worktree, excluded locally during external
+setup. Scope checks also protect this runtime directory. This preserves normal
+Git-metadata protection; it does not require broader sandbox permissions.
+[Codex Windows sandbox implementation, 0.153.4](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/sandboxing/src/windows.rs)
