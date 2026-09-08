@@ -1,7 +1,10 @@
 """Owned, ignored per-worktree state accessible to native workspace sandboxes."""
 
+import csv
 import json
 import os
+import re
+import subprocess
 import tempfile
 import uuid
 from contextlib import contextmanager
@@ -13,6 +16,26 @@ from . import git
 
 OWNER = {"schema_version": 1, "owner": "trailbun"}
 IGNORE_RULE = b"/.trailbun/"
+
+
+def _grant_bootstrap_user(location):
+    """Keep the initializing user's access when a sandbox owns later state files."""
+    if os.name != "nt":
+        return
+    # OWNER RIGHTS inherited from a Windows temporary directory follows each
+    # new file's owner. Add only the bootstrap user's SID to this new runtime.
+    # https://learn.microsoft.com/windows-server/administration/windows-commands/icacls
+    system = Path(os.environ["SystemRoot"]) / "System32"
+    try:
+        result = subprocess.run([str(system / "whoami.exe"), "/user", "/fo", "csv", "/nh"],
+                                check=True, capture_output=True, text=True, errors="replace", timeout=10)
+        rows = list(csv.reader(result.stdout.splitlines()))
+        if len(rows) != 1 or len(rows[0]) != 2 or not re.fullmatch(r"S-1-(?:\d+-)+\d+", rows[0][1]):
+            raise ValueError("Cannot identify the bootstrap user's SID")
+        subprocess.run([str(system / "icacls.exe"), str(location), "/grant", f"*{rows[0][1]}:(OI)(CI)M", "/q"],
+                       check=True, capture_output=True, timeout=10)
+    except (subprocess.SubprocessError, ValueError, csv.Error) as exc:
+        raise OSError("Cannot preserve the bootstrap user's access to Trailbun runtime") from exc
 
 
 def _git_path(root, name):
@@ -63,6 +86,11 @@ def bootstrap(root):
             raise RuntimeError("A conflicting ignore rule exposes .trailbun; correct it outside the native sandbox")
         if not location.exists():
             location.mkdir()
+            try:
+                _grant_bootstrap_user(location)
+            except OSError:
+                location.rmdir()  # Newly created and still empty; never remove user content.
+                raise
             _write(location / "owner.json", OWNER)
     except OSError as exc:
         raise RuntimeError("Initialize Trailbun with setup or start outside the native sandbox before binding its session") from exc

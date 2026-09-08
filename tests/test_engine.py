@@ -1,3 +1,7 @@
+import csv
+import os
+import subprocess
+
 import pytest
 
 from conftest import git_command
@@ -205,6 +209,44 @@ def test_runtime_bootstrap_is_owned_ignored_and_idempotent(repo, contract):
     assert exclude.read_bytes() == once
     assert git.clean(repo)
     engine.start(repo, contract)
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
+def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, tmp_path):
+    result = subprocess.run(["whoami.exe", "/user", "/fo", "csv", "/nh"],
+                            check=True, capture_output=True, text=True)
+    sid = next(csv.reader(result.stdout.splitlines()))[1]
+    location = store.bootstrap(repo)
+    acl = tmp_path / "directory-acl.txt"
+    subprocess.run(["icacls.exe", str(location), "/save", str(acl), "/q"],
+                   check=True, capture_output=True)
+    assert f"(A;OICI;0x1301bf;;;{sid})" in acl.read_text(encoding="utf-16-le")
+    path = location / "state.json"
+    store._write(path, {"schema_version": 1, "revision": 1})
+    store._write(path, {"schema_version": 1, "revision": 2})
+    subprocess.run(["icacls.exe", str(path), "/save", str(acl), "/q"],
+                   check=True, capture_output=True)
+    assert f"(A;ID;0x1301bf;;;{sid})" in acl.read_text(encoding="utf-16-le")
+    assert store.load(repo)["revision"] == 2
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows ACL bootstrap")
+def test_runtime_does_not_grant_new_user_access_on_later_bootstrap(repo, monkeypatch):
+    store.bootstrap(repo)
+    def unexpected(_location):
+        raise AssertionError("A later sandbox caller must not add its identity")
+    monkeypatch.setattr(store, "_grant_bootstrap_user", unexpected)
+    store.bootstrap(repo)
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows ACL bootstrap")
+def test_failed_acl_provisioning_leaves_no_owned_runtime(repo, monkeypatch):
+    def denied(_location):
+        raise OSError("ACL provisioning denied")
+    monkeypatch.setattr(store, "_grant_bootstrap_user", denied)
+    with pytest.raises(RuntimeError, match="outside the native sandbox"):
+        store.bootstrap(repo)
+    assert not (repo / ".trailbun").exists()
 
 
 def test_unowned_runtime_conflict_leaves_user_files_and_excludes_untouched(repo):
