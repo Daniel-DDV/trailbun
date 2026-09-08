@@ -1,0 +1,13 @@
+{
+  "task": "resume",
+  "condition": "trailbun",
+  "baseline": "1be7cb6c581a98a38c36104f6de9b506ae771ca4",
+  "fixture_sha256": "3378bcbafb09283b393392f4ecd5daf14630c3857455994bbe5949e3010b8987",
+  "initial_files": {
+    "app/__init__.py": "",
+    "app/greeting.py": "def greeting(name):\n    return f\"Hello, {name}!\"\n",
+    ".gitignore": "__pycache__/\n*.pyc\n",
+    "acceptance.py": "from app.greeting import greeting\nfor value in (None, \"\", \"   \"):\n    assert greeting(value) == \"Welcome, traveler.\"\nassert greeting(\" Ada \") == \"Welcome, Ada.\"\nassert greeting(\"Léa\") == \"Welcome, Léa.\"\nprint(\"acceptance: passed\")\n"
+  },
+  "seeded_attempts": []
+}

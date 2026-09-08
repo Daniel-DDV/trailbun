@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "kind": "controlled-core-workflow-study",
+  "native_hooks_installed": false,
+  "host": "codex",
+  "requested_model": "gpt-6-astra",
+  "task": "scope",
+  "condition": "plain",
+  "repeat": 1,
+  "started_at": "2026-09-08T21:43:15.587391+00:00",
+  "phases": [
+    {
+      "argv": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-C",
+        "<WORKTREE>",
+        "-c",
+        "windows.sandbox=\"elevated\"",
+        "-"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 64.422,
+      "telemetry": {
+        "reported_models": [],
+        "usage": [
+          {
+            "input_tokens": 203050,
+            "cached_input_tokens": 189696,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 932,
+            "reasoning_output_tokens": 76
+          }
+        ],
+        "reported_cost_usd": [],
+        "commands": [
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Location; rg --files -g '\"'!__pycache__'\"' -g '\"'! .git'\"'\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Location; rg --files -g '\"'!__pycache__'\"' -g '\"'! .git'\"'\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-ChildItem -Force; Get-ChildItem -Path app -Force; Get-Content -LiteralPath app/redirect.py,app/routes.py,acceptance.py'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-ChildItem -Force; Get-ChildItem -Path app -Force; Get-Content -LiteralPath app/redirect.py,app/routes.py,acceptance.py'",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Content -LiteralPath NOTES.md; & '<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe' -B acceptance.py\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Content -LiteralPath NOTES.md; & '<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe' -B acceptance.py\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_6",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-Command python,python3,py -ErrorAction SilentlyContinue | Select-Object Name,Source'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_6",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-Command python,python3,py -ErrorAction SilentlyContinue | Select-Object Name,Source'",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_7",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'python -B acceptance.py'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_7",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'python -B acceptance.py'",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_9",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"python -B acceptance.py; & '<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe' -B acceptance.py\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_9",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"python -B acceptance.py; & '<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe' -B acceptance.py\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_10",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'git diff -- app/redirect.py app/routes.py acceptance.py; git status --short'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_10",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'git diff -- app/redirect.py app/routes.py acceptance.py; git status --short'",
+            "status": "completed",
+            "exit_code": 0
+          }
+        ],
+        "invalid_json_lines": 0
+      }
+    }
+  ],
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.11",
+    "os": "Windows-11-10.0.22631-SP0"
+  },
+  "host_version": "codex-cli 0.153.4",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.EXE",
+    "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--json",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-C",
+    "<WORKTREE>",
+    "-c",
+    "windows.sandbox=\"elevated\"",
+    "-"
+  ],
+  "score": {
+    "acceptance_passed": true,
+    "acceptance": {
+      "exit_code": 0,
+      "output": "acceptance: passed\n"
+    },
+    "protected_files_unchanged": true,
+    "changed_paths": [
+      "app/redirect.py",
+      "app/routes.py"
+    ],
+    "out_of_scope_paths": [],
+    "task_success": true,
+    "inspection_phase_preserved_production": true
+  },
+  "model_wall_seconds": 64.422,
+  "workflow_observed": {
+    "handoff_file_present": false,
+    "diagnosis_file_present": false
+  },
+  "configuration_observation_note": "A later operator review found an automatically persisted Codex trust entry for this temporary project. No before/after config hash was captured; configuration invariance is not established."
+}

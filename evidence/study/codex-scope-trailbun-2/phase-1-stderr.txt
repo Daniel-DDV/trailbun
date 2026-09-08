@@ -1,0 +1,1 @@
+2026-09-08T21:28:41.924333Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`\\\"C:\\\\\\\\Program Files\\\\\\\\PowerShell\\\\\\\\7\\\\\\\\pwsh.exe\\\" -Command \\\"Get-Location; rg --files --hidden -g '\\\"'!__pycache__'\\\"' -g '\\\"'!.git/objects/**'\\\"' -g '\\\"'!.git/hooks/**'\\\"'\\\"` rejected: blocked by policy\")" }

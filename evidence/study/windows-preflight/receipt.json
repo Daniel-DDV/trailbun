@@ -1,0 +1,72 @@
+{
+  "kind": "windows-sandbox-preflight",
+  "requested_model": "gpt-6-astra",
+  "paid_model_call": true,
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.EXE",
+    "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--json",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-C",
+    "<WORKTREE>",
+    "-c",
+    "windows.sandbox=\"elevated\"",
+    "-"
+  ],
+  "model_tool_read_exit_code": 0,
+  "model_tool_write_and_self_check_exit_code": 0,
+  "independent_content_verified": false,
+  "independent_verification_error": "PermissionError: [Errno 13] Permission denied reading <WORKTREE>/allowed.txt",
+  "duration_seconds": null,
+  "duration_note": "The one-off preflight exporter raised before retaining duration; no estimate substituted.",
+  "receipt_reconstructed_from": "stdout.jsonl and the retained tool-run exception, without rerunning the model",
+  "telemetry": {
+    "reported_models": [],
+    "usage": [
+      {
+        "input_tokens": 64326,
+        "cached_input_tokens": 54144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 285,
+        "reasoning_output_tokens": 0
+      }
+    ],
+    "reported_cost_usd": [],
+    "commands": [
+      {
+        "id": "item_2",
+        "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Content -LiteralPath '.\\\\marker.txt' -Raw\"",
+        "status": "in_progress",
+        "exit_code": null
+      },
+      {
+        "id": "item_2",
+        "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Content -LiteralPath '.\\\\marker.txt' -Raw\"",
+        "status": "completed",
+        "exit_code": 0
+      },
+      {
+        "id": "item_3",
+        "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"[System.IO.File]::WriteAllText((Join-Path (Get-Location).Path 'allowed.txt'), \\\"passed\"'`n\", [System.Text.UTF8Encoding]::new($false))\n$actualBytes = [System.IO.File]::ReadAllBytes((Join-Path (Get-Location).Path '\"'allowed.txt'))\nif ([System.BitConverter]::ToString(\"'$actualBytes) -ne '\"'70-61-73-73-65-64-0A') { throw 'Content verification failed' }\nWrite-Output 'Verified: passed followed by LF, UTF-8 without BOM.'\"",
+        "status": "in_progress",
+        "exit_code": null
+      },
+      {
+        "id": "item_3",
+        "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"[System.IO.File]::WriteAllText((Join-Path (Get-Location).Path 'allowed.txt'), \\\"passed\"'`n\", [System.Text.UTF8Encoding]::new($false))\n$actualBytes = [System.IO.File]::ReadAllBytes((Join-Path (Get-Location).Path '\"'allowed.txt'))\nif ([System.BitConverter]::ToString(\"'$actualBytes) -ne '\"'70-61-73-73-65-64-0A') { throw 'Content verification failed' }\nWrite-Output 'Verified: passed followed by LF, UTF-8 without BOM.'\"",
+        "status": "completed",
+        "exit_code": 0
+      }
+    ],
+    "invalid_json_lines": 0
+  },
+  "source": "https://learn.chatgpt.com/docs/windows/windows-sandbox",
+  "global_config_change_detected_later": true,
+  "configuration_note": "A later operator review found Codex automatically persisted this temporary project trust. No before/after config hash was captured. The earlier global_config_changed=false metadata was incorrect; raw model events are unchanged."
+}

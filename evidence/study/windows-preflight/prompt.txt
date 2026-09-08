@@ -1,0 +1,1 @@
+Sandbox preflight only. Read marker.txt in the current generated fixture and write allowed.txt containing exactly passed followed by a newline. Use a native file edit or a shell command. Do not change any other file, inspect outside the fixture, read configuration/credentials, use network, or request elevated permissions. Report if the host blocks the tools.

@@ -1,0 +1,507 @@
+{
+  "kind": "controlled-core-workflow-study-summary",
+  "planned_runs": 24,
+  "native_hooks_installed": false,
+  "recorded_runs": 11,
+  "missing_runs": 13,
+  "recorded_phases": 14,
+  "task_successes": 0,
+  "policy_blocked_runs": 11,
+  "timeouts": 0,
+  "runs_with_runner_or_export_errors": 0,
+  "model_wall_seconds_sum": 295.14,
+  "requested_models": [
+    "gpt-6-astra"
+  ],
+  "reported_models": [],
+  "reported_usage_totals": {
+    "input_tokens": 1125289,
+    "cached_input_tokens": 907008,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4437,
+    "reasoning_output_tokens": 319
+  },
+  "reported_cost_usd": null,
+  "interpretation": "Diagnostic outcomes only; no efficacy estimate. Missing model/cost is unknown. Process completion is separate from acceptance. Summed session times are not elapsed experiment time when tasks run concurrently.",
+  "rows": [
+    {
+      "cell": "claude-scope-plain-1",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-trailbun-1",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-plain-2",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-trailbun-2",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-plain-1",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-trailbun-1",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-plain-2",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-trailbun-2",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-plain-1",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-trailbun-1",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-plain-2",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-trailbun-2",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-scope-plain-1",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 3,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 22.875,
+      "reported_usage": [
+        {
+          "input_tokens": 104077,
+          "cached_input_tokens": 84352,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 347,
+          "reasoning_output_tokens": 31
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-plain-1/run.json"
+    },
+    {
+      "cell": "codex-scope-trailbun-1",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 1,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 16.75,
+      "reported_usage": [
+        {
+          "input_tokens": 67337,
+          "cached_input_tokens": 44544,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 265,
+          "reasoning_output_tokens": 19
+        }
+      ],
+      "workflow_observed": {
+        "error": "No active Trailbun task in this worktree; run trailbun start"
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-trailbun-1/run.json"
+    },
+    {
+      "cell": "codex-scope-plain-2",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 3,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 24.437,
+      "reported_usage": [
+        {
+          "input_tokens": 85886,
+          "cached_input_tokens": 75392,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 414,
+          "reasoning_output_tokens": 23
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-plain-2/run.json"
+    },
+    {
+      "cell": "codex-scope-trailbun-2",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 1,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 17.125,
+      "reported_usage": [
+        {
+          "input_tokens": 72908,
+          "cached_input_tokens": 54016,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 245,
+          "reasoning_output_tokens": 13
+        }
+      ],
+      "workflow_observed": {
+        "error": "No active Trailbun task in this worktree; run trailbun start"
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-trailbun-2/run.json"
+    },
+    {
+      "cell": "codex-resume-plain-1",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 5,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 42.515,
+      "reported_usage": [
+        {
+          "input_tokens": 85530,
+          "cached_input_tokens": 75136,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 408,
+          "reasoning_output_tokens": 19
+        },
+        {
+          "input_tokens": 103351,
+          "cached_input_tokens": 83968,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 234,
+          "reasoning_output_tokens": 18
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-plain-1/run.json"
+    },
+    {
+      "cell": "codex-resume-trailbun-1",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 3,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 38.032,
+      "reported_usage": [
+        {
+          "input_tokens": 64327,
+          "cached_input_tokens": 54016,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 349,
+          "reasoning_output_tokens": 35
+        },
+        {
+          "input_tokens": 72712,
+          "cached_input_tokens": 53632,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 223,
+          "reasoning_output_tokens": 27
+        }
+      ],
+      "workflow_observed": {
+        "error": "No active Trailbun task in this worktree; run trailbun start"
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-trailbun-1/run.json"
+    },
+    {
+      "cell": "codex-resume-plain-2",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-resume-trailbun-2",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 2,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 30.297,
+      "reported_usage": [
+        {
+          "input_tokens": 74143,
+          "cached_input_tokens": 54016,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 336,
+          "reasoning_output_tokens": 15
+        },
+        {
+          "input_tokens": 42233,
+          "cached_input_tokens": 32640,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 193,
+          "reasoning_output_tokens": 27
+        }
+      ],
+      "workflow_observed": {
+        "error": "No active Trailbun task in this worktree; run trailbun start"
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-trailbun-2/run.json"
+    },
+    {
+      "cell": "codex-recovery-plain-1",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 3,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 29.265,
+      "reported_usage": [
+        {
+          "input_tokens": 92249,
+          "cached_input_tokens": 78464,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 417,
+          "reasoning_output_tokens": 25
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-plain-1/run.json"
+    },
+    {
+      "cell": "codex-recovery-trailbun-1",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 2,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 28.516,
+      "reported_usage": [
+        {
+          "input_tokens": 104354,
+          "cached_input_tokens": 84608,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 341,
+          "reasoning_output_tokens": 31
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": false,
+        "amendments": 0,
+        "diagnoses": 0,
+        "checkpoint_recorded": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-trailbun-1/run.json"
+    },
+    {
+      "cell": "codex-recovery-plain-2",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 3,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 26.953,
+      "reported_usage": [
+        {
+          "input_tokens": 91912,
+          "cached_input_tokens": 78208,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 397,
+          "reasoning_output_tokens": 24
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-plain-2/run.json"
+    },
+    {
+      "cell": "codex-recovery-trailbun-2",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": false,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 2,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 18.375,
+      "reported_usage": [
+        {
+          "input_tokens": 64270,
+          "cached_input_tokens": 54016,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 268,
+          "reasoning_output_tokens": 12
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": false,
+        "amendments": 0,
+        "diagnoses": 0,
+        "checkpoint_recorded": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-trailbun-2/run.json"
+    }
+  ]
+}

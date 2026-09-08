@@ -1,0 +1,5 @@
+Task: greeting(name) must return "Welcome, NAME.". None, empty and whitespace-only names become "traveler". Strip surrounding whitespace from nonempty names but preserve their case and Unicode characters. Do not add dependencies or change the public function name.
+Acceptance command: "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe" -B acceptance.py
+Only inspect this generated fixture and use Python standard library. Do not read other repositories, global configuration or credentials. Do not use network tools. Keep acceptance.py and existing unrelated files unchanged. State what you checked.
+Workflow: use normal coding tools and the acceptance command. Do not use Trailbun. Record an authorized scope extension in your final response. For a handoff write HANDOFF.md. For recovery, write DIAGNOSIS.md with reproduction, cause, evidence and next experiment before modifying production code.
+This is the inspection phase only. Reproduce the failure and persist a concise handoff using this condition's task-state method. Preserve the exact requirements and next action. Do not modify app files yet.
