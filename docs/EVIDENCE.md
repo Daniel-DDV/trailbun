@@ -6,9 +6,13 @@ benefit to an agent.
 
 ## Core validation
 
-Local regression run: **135 passed, 1 skipped in 90.71 seconds**, Python 3.12.10
-on Windows 11. The skip is a newline filename that Windows cannot create.
-The suite covers contract validation, Git layers and renames, linked worktrees,
+The [release validation record](https://github.com/Daniel-DDV/trailbun/releases/download/v0.2.0/release-validation.json)
+records the exact CI revision and all twelve Windows, Ubuntu and macOS / Python
+3.11–3.14 jobs, source-archive replay, isolated wheel installation and distribution
+SHA-256 hashes. Platform-specific skips remain explicit in the test output;
+Windows cannot create the newline filename used by one Git fixture.
+
+The regression suite covers contract validation, Git layers and renames, linked worktrees,
 symlink escapes, Windows path case, stale verification, expected initial red,
 failure budgets, evidence-backed diagnosis, malformed state, session isolation,
 native protocol translation and reversible installation conflicts.
@@ -19,17 +23,20 @@ uv run python -m build
 ```
 
 The source distribution and wheel build successfully. The wheel contains all
-three native skills. A separate replay of native-probe and study regressions
-from the extracted source archive passed **29 tests in 13.42 seconds**.
-The [first remote CI run](https://github.com/Daniel-DDV/trailbun/actions/runs/34281041603)
-passed all twelve Windows, Ubuntu and macOS / Python 3.11–3.14 combinations.
-The subsequent runtime compatibility correction receives a separate final run.
+three native skills. Its isolated demo runs from a fresh directory outside the
+checkout and detects a real scope violation before executing the passing check.
+The release's source archive includes the retained native-probe fixtures needed
+to replay its tests. Git preserves those evidence files byte for byte across
+platforms so their recorded hashes remain usable.
 
 Independent review found and corrected defects before release: a `.git` symlink
 alias, subtree-scoped checks, removed ignored watchers, case-sensitive scope
 matching on Windows, corrupt state handling, lost incomplete-check evidence,
 session validation after mutation, disabled-hook reporting and partial uninstall
-on conflicts. Regressions accompany the corrections. Review is not a claim that
+on conflicts. Windows CI also exposed test assumptions about SDDL identity
+aliases and preexisting FullControl rights. The corrected tests resolve actual
+identities and verify the grant preserves existing access while adding only
+the required Modify rights. Regressions accompany the corrections. Review is not a claim that
 every possible host or filesystem action is covered.
 
 ## Deterministic demonstration
