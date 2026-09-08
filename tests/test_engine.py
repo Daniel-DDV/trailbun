@@ -265,6 +265,61 @@ def test_operator_acl_requires_exact_principal_and_all_modify_rights(change):
     assert not _operator_acl_matches({**rule, **change}, "operator")
 
 
+def _unrelated_acl_preserved(before, after, sid):
+    previous = [rule for rule in before if rule["sid"] != sid]
+    current = [rule for rule in after if rule["sid"] != sid]
+    # Explicit/inherited order can change access in the presence of DENY.
+    # https://learn.microsoft.com/windows/win32/secauthz/order-of-aces-in-a-dacl
+    old_denies = [rule for rule in before if rule["type"] != 0]
+    new_denies = [rule for rule in after if rule["type"] != 0]
+    if old_denies or new_denies:
+        return old_denies == new_denies and previous == current
+    remaining = current.copy()
+    for rule in previous:
+        if rule not in remaining:
+            return False
+        remaining.remove(rule)
+    # CI icacls can add explicit copies of inherited Allow ACEs. Accept only
+    # exact copies while retaining every original; no new SID, right or scope.
+    # This compares creation-time access, not future parent-ACL propagation.
+    return all(not rule["inherited"] and {**rule, "inherited": True} in previous
+               for rule in remaining)
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows ACL resolution")
+def test_native_acl_accepts_observed_ci_allow_copies():
+    # Observed in Actions job 102265420281; Win11 may retain only inherited ACEs.
+    inherited = "".join(f"(A;OICIID;FA;;;{sid})" for sid in ("OW", "SY", "BA"))
+    explicit = inherited.replace("OICIID", "OICI")
+    before = _windows_acl_rules(sddl="D:" + inherited)
+    after = _windows_acl_rules(sddl="D:AI" + explicit + inherited)
+    assert len(before) == 3 and len(after) == 6
+    assert _unrelated_acl_preserved(before, after, "operator")
+
+
+@pytest.mark.parametrize("change,expected", [(None, True), ({"sid": "new-user"}, False),
+    ({"rights": 0x1F01FF}, False), ({"inheritance": 0}, False),
+    ({"propagation": 1}, False), ({"type": 1}, False)])
+def test_acl_duplicate_allow_cannot_expand_principals_rights_or_scope(change, expected):
+    inherited = {"sid": "other", "rights": 0x1301BF, "inheritance": 3,
+                 "propagation": 0, "inherited": True, "type": 0}
+    duplicate = {**inherited, "inherited": False, **(change or {})}
+    assert _unrelated_acl_preserved([inherited], [duplicate, inherited], "operator") is expected
+    assert not _unrelated_acl_preserved([inherited], [duplicate], "operator")
+
+
+def test_acl_duplicate_exception_never_masks_deny_changes_or_order():
+    allow = {"sid": "other", "rights": 0x1301BF, "inheritance": 3,
+             "propagation": 0, "inherited": True, "type": 0}
+    deny = {**allow, "type": 1}
+    duplicate = {**allow, "inherited": False}
+    assert _unrelated_acl_preserved([deny, allow], [deny, allow], "operator")
+    assert not _unrelated_acl_preserved([deny, allow], [allow, deny], "operator")
+    assert not _unrelated_acl_preserved([deny, allow], [duplicate, deny, allow], "operator")
+    operator_deny = {**deny, "sid": "operator"}
+    assert not _unrelated_acl_preserved([operator_deny, allow], [allow], "operator")
+
+
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
 @pytest.mark.parametrize("preexisting_full_control", [False, True])
 def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, monkeypatch, preexisting_full_control):
@@ -285,7 +340,7 @@ def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, monke
     after = _windows_acl_rules(location)
     assert any(_operator_acl_matches(rule, sid) for rule in after)
     # /grant merges existing access. Require precisely the old rights plus Modify,
-    # and preserve every unrelated principal's rules without granting new ones.
+    # and preserve unrelated access at creation without granting new rights.
     previous_rights = current_rights = 0
     for rule in before:
         if rule["sid"] == sid and rule["type"] == 0:
@@ -296,8 +351,7 @@ def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, monke
     assert current_rights == previous_rights | 0x1301BF
     if preexisting_full_control:
         assert previous_rights == current_rights == 0x1F01FF
-    assert sorted(json.dumps(rule, sort_keys=True) for rule in before if rule["sid"] != sid) == sorted(
-        json.dumps(rule, sort_keys=True) for rule in after if rule["sid"] != sid)
+    assert _unrelated_acl_preserved(before, after, sid)
     path = location / "state.json"
     store._write(path, {"schema_version": 1, "revision": 1})
     store._write(path, {"schema_version": 1, "revision": 2})
