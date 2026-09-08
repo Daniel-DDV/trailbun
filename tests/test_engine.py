@@ -250,19 +250,64 @@ def test_native_acl_resolution_accepts_local_administrator_alias():
     assert aliased == _windows_acl_rules(sddl=f"D:(A;OICI;0x1301bf;;;{sid})")
 
 
+def _operator_acl_matches(rule, sid, *, inheritance=3, inherited=False):
+    expected = {"sid": sid, "inheritance": inheritance, "propagation": 0,
+                "inherited": inherited, "type": 0}
+    return (all(rule[key] == value for key, value in expected.items())
+            and rule["rights"] & 0x1301BF == 0x1301BF)  # Modify and Synchronize.
+
+
+@pytest.mark.parametrize("change", [{"sid": "different-user"}, {"rights": 0x1301BD}])
+def test_operator_acl_requires_exact_principal_and_all_modify_rights(change):
+    rule = {"sid": "operator", "rights": 0x1301BF, "inheritance": 3,
+            "propagation": 0, "inherited": False, "type": 0}
+    assert _operator_acl_matches(rule, "operator")
+    assert not _operator_acl_matches({**rule, **change}, "operator")
+
+
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
-def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo):
+@pytest.mark.parametrize("preexisting_full_control", [False, True])
+def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, monkeypatch, preexisting_full_control):
     result = subprocess.run(["whoami.exe", "/user", "/fo", "csv", "/nh"],
                             check=True, capture_output=True, text=True)
     sid = next(csv.reader(result.stdout.splitlines()))[1]
+    before = []
+    original_grant = store._grant_bootstrap_user
+    def record_initial_acl(location):
+        if preexisting_full_control:
+            icacls = Path(os.environ["SystemRoot"]) / "System32/icacls.exe"
+            subprocess.run([str(icacls), str(location), "/grant", f"*{sid}:(OI)(CI)F", "/q"],
+                           check=True, capture_output=True, timeout=15)
+        before.extend(_windows_acl_rules(location))
+        original_grant(location)
+    monkeypatch.setattr(store, "_grant_bootstrap_user", record_initial_acl)
     location = store.bootstrap(repo)
-    expected = {"sid": sid, "rights": 0x1301BF, "inheritance": 3,
-                "propagation": 0, "inherited": False, "type": 0}
-    assert expected in _windows_acl_rules(location)
+    after = _windows_acl_rules(location)
+    assert any(_operator_acl_matches(rule, sid) for rule in after)
+    # /grant merges existing access. Require precisely the old rights plus Modify,
+    # and preserve every unrelated principal's rules without granting new ones.
+    previous_rights = current_rights = 0
+    for rule in before:
+        if rule["sid"] == sid and rule["type"] == 0:
+            previous_rights |= rule["rights"]
+    for rule in after:
+        if rule["sid"] == sid and rule["type"] == 0:
+            current_rights |= rule["rights"]
+    assert current_rights == previous_rights | 0x1301BF
+    if preexisting_full_control:
+        assert previous_rights == current_rights == 0x1F01FF
+    assert sorted(json.dumps(rule, sort_keys=True) for rule in before if rule["sid"] != sid) == sorted(
+        json.dumps(rule, sort_keys=True) for rule in after if rule["sid"] != sid)
     path = location / "state.json"
     store._write(path, {"schema_version": 1, "revision": 1})
     store._write(path, {"schema_version": 1, "revision": 2})
-    assert {**expected, "inheritance": 0, "inherited": True} in _windows_acl_rules(path)
+    file_rules = _windows_acl_rules(path)
+    assert any(_operator_acl_matches(rule, sid, inheritance=0, inherited=True) for rule in file_rules)
+    file_rights = 0
+    for rule in file_rules:
+        if rule["sid"] == sid and rule["type"] == 0:
+            file_rights |= rule["rights"]
+    assert file_rights == current_rights
     assert store.load(repo)["revision"] == 2
 
 
