@@ -1,1 +1,1 @@
-"""Executable checks for Done Is Not Proof."""
+"""Executable checks for Trailbun's field manual."""

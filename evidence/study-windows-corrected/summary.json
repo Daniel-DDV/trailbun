@@ -1,0 +1,266 @@
+{
+  "kind": "controlled-core-workflow-study-summary",
+  "planned_runs": 24,
+  "native_hooks_installed": false,
+  "recorded_runs": 1,
+  "missing_runs": 23,
+  "recorded_phases": 1,
+  "task_successes": 1,
+  "policy_blocked_runs": 0,
+  "timeouts": 0,
+  "runs_with_runner_or_export_errors": 0,
+  "model_wall_seconds_sum": 64.422,
+  "requested_models": [
+    "gpt-6-astra"
+  ],
+  "reported_models": [],
+  "reported_usage_totals": {
+    "input_tokens": 203050,
+    "cached_input_tokens": 189696,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 932,
+    "reasoning_output_tokens": 76
+  },
+  "reported_cost_usd": null,
+  "interpretation": "Diagnostic outcomes only; no efficacy estimate. Missing model/cost is unknown. Process completion is separate from acceptance. Summed session times are not elapsed experiment time when tasks run concurrently.",
+  "rows": [
+    {
+      "cell": "claude-scope-plain-1",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-trailbun-1",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-plain-2",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-trailbun-2",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-plain-1",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-trailbun-1",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-plain-2",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-trailbun-2",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-plain-1",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-trailbun-1",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-plain-2",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-trailbun-2",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-scope-plain-1",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 64.422,
+      "reported_usage": [
+        {
+          "input_tokens": 203050,
+          "cached_input_tokens": 189696,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 932,
+          "reasoning_output_tokens": 76
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-plain-1/run.json"
+    },
+    {
+      "cell": "codex-scope-trailbun-1",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-scope-plain-2",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-scope-trailbun-2",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-resume-plain-1",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-resume-trailbun-1",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-resume-plain-2",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-resume-trailbun-2",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-recovery-plain-1",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-recovery-trailbun-1",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-recovery-plain-2",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-recovery-trailbun-2",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    }
+  ]
+}

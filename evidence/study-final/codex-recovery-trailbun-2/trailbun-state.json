@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "run_id": "23499cb5-45e7-459f-b8bf-71566b2432fb",
+  "contract": {
+    "goal": "Diagnose failed rounding corrections and compute exact decimal totals.",
+    "exclusions": [
+      "No unrelated architecture or dependencies; preserve acceptance.py"
+    ],
+    "allowed_paths": [
+      "app/money.py"
+    ],
+    "watch_ignored": [],
+    "checks": [
+      {
+        "id": "acceptance",
+        "argv": [
+          "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+          "-B",
+          "acceptance.py"
+        ],
+        "timeout_seconds": 15
+      }
+    ],
+    "expected_red": [
+      "acceptance"
+    ]
+  },
+  "revision": 1,
+  "baseline": "04b1a516fb17a8f93a3b5caeb6f81f8896e89840",
+  "initial_fingerprint": "ee2eae416902fd446a87fb552ef6c54cbb7eac4afaa0c34da78d5c6e1154aa0e",
+  "baseline_watched": {},
+  "created_at": "2026-09-08T22:20:36.876463+00:00",
+  "contract_history": [],
+  "progress": {
+    "summary": "Reproduced seeded failure, recorded evidence-backed diagnosis, and replaced float rounding with Decimal sum and ROUND_HALF_UP quantize. Acceptance and four edge cases pass. Existing initial-red receipt confirmed; duplicate baseline rejected. Delegated review attempted but unavailable: no thread.",
+    "next_action": "Run check and final verify.",
+    "failed_hypotheses": [
+      "Increasing float round precision to two places does not provide Decimal half-up rounding."
+    ],
+    "updated_at": "2026-09-08T22:22:09.952601+00:00"
+  },
+  "receipts": [
+    {
+      "id": "2d17e27f75434b7bb26d5fa49a5d4347",
+      "run_id": "23499cb5-45e7-459f-b8bf-71566b2432fb",
+      "revision": 1,
+      "contract_digest": "faf732e2885eb5d4b107664f7efec782956f8ed23673a883ac6f332ae47ea4cf",
+      "artifact_fingerprint": "ee2eae416902fd446a87fb552ef6c54cbb7eac4afaa0c34da78d5c6e1154aa0e",
+      "status": "violation",
+      "baseline": true,
+      "timestamp": "2026-09-08T22:20:38.621576+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\2d17e27f75434b7bb26d5fa49a5d4347.json"
+    },
+    {
+      "id": "42664d4c414140f59821345fcd7c5b47",
+      "run_id": "23499cb5-45e7-459f-b8bf-71566b2432fb",
+      "revision": 1,
+      "contract_digest": "faf732e2885eb5d4b107664f7efec782956f8ed23673a883ac6f332ae47ea4cf",
+      "artifact_fingerprint": "f4740abac1698e736272241bb59032f69b8fa823de6266971937621bf7fe821a",
+      "status": "violation",
+      "baseline": false,
+      "timestamp": "2026-09-08T22:20:40.174511+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\42664d4c414140f59821345fcd7c5b47.json"
+    },
+    {
+      "id": "16d4c8cea5c6430eab2179a09719450a",
+      "run_id": "23499cb5-45e7-459f-b8bf-71566b2432fb",
+      "revision": 1,
+      "contract_digest": "faf732e2885eb5d4b107664f7efec782956f8ed23673a883ac6f332ae47ea4cf",
+      "artifact_fingerprint": "8c1e29ba9b83e804619245f83a42173fc28f5900898fae8f4b800f81f175758e",
+      "status": "violation",
+      "baseline": false,
+      "timestamp": "2026-09-08T22:20:41.704835+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\16d4c8cea5c6430eab2179a09719450a.json"
+    },
+    {
+      "id": "4780f9caf56b456991f2211780d7bcdf",
+      "run_id": "23499cb5-45e7-459f-b8bf-71566b2432fb",
+      "revision": 1,
+      "contract_digest": "faf732e2885eb5d4b107664f7efec782956f8ed23673a883ac6f332ae47ea4cf",
+      "artifact_fingerprint": "034b48dd6139f4b3466907c2f22ffc7c979488966c20be5a28c410a95fc9b441",
+      "status": "ok",
+      "baseline": false,
+      "timestamp": "2026-09-08T22:22:12.562463+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\4780f9caf56b456991f2211780d7bcdf.json"
+    }
+  ],
+  "failures": {
+    "acceptance": {
+      "fingerprints": [],
+      "count": 0
+    }
+  },
+  "needs_diagnosis": false,
+  "baseline_recorded": true,
+  "diagnoses": [
+    {
+      "reproduction": "Ran the exact acceptance command before edits; assertion for money_total([1.005]) failed at acceptance.py:3, matching both harness-seeded attempts.",
+      "cause": "Both seeded corrections convert decimal strings to binary floats and use round, returning float with the wrong rounding behavior. Changing precision from one to two places does not implement Decimal ROUND_HALF_UP.",
+      "evidence": ".git/prior-attempts.json",
+      "next_action": "In memory, test summing Decimal strings from Decimal(0) and quantizing once to Decimal(0.01) with ROUND_HALF_UP; check 1.005, 0.1 plus 0.2, empty input and negative ties before editing app/money.py.",
+      "evidence_record": {
+        "path": "<WORKTREE>\\.git\\prior-attempts.json",
+        "sha256": "59fb2aa6a6940244361f2915f3a191146e0f9013c71fc39c8f8dd9e11aa0b1b2",
+        "receipt_id": null
+      },
+      "timestamp": "2026-09-08T22:21:15.064104+00:00",
+      "previous_failures": {
+        "acceptance": {
+          "fingerprints": [
+            "f4740abac1698e736272241bb59032f69b8fa823de6266971937621bf7fe821a",
+            "8c1e29ba9b83e804619245f83a42173fc28f5900898fae8f4b800f81f175758e"
+          ],
+          "count": 2
+        }
+      }
+    }
+  ]
+}

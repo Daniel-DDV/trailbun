@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "run_id": "acee7155-40bc-431a-88b6-df091399205d",
+  "contract": {
+    "goal": "Diagnose failed rounding corrections and compute exact decimal totals.",
+    "exclusions": [
+      "No unrelated architecture or dependencies; preserve acceptance.py"
+    ],
+    "allowed_paths": [
+      "app/money.py"
+    ],
+    "watch_ignored": [],
+    "checks": [
+      {
+        "id": "acceptance",
+        "argv": [
+          "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
+          "-B",
+          "acceptance.py"
+        ],
+        "timeout_seconds": 15
+      }
+    ],
+    "expected_red": [
+      "acceptance"
+    ]
+  },
+  "revision": 1,
+  "baseline": "49d4aa447f38897c70c6c8ac07d85f3bf1374453",
+  "initial_fingerprint": "7f110e1fb8041c5ffb233e2e8cf42c3129cea76abc28651e672f6839af6c2cfe",
+  "baseline_watched": {},
+  "created_at": "2026-09-08T21:28:56.895514+00:00",
+  "contract_history": [],
+  "progress": {
+    "summary": "Not started",
+    "next_action": "Inspect relevant files and restate the contract",
+    "failed_hypotheses": []
+  },
+  "receipts": [
+    {
+      "id": "d8fa0e5750ed4b9bb89f6aad63256761",
+      "run_id": "acee7155-40bc-431a-88b6-df091399205d",
+      "revision": 1,
+      "contract_digest": "24b65ecbb99785ec33a7cd14156d7c7ef27568e8d26b7534df9cebeed3b1585f",
+      "artifact_fingerprint": "7f110e1fb8041c5ffb233e2e8cf42c3129cea76abc28651e672f6839af6c2cfe",
+      "status": "violation",
+      "baseline": true,
+      "timestamp": "2026-09-08T21:28:57.956604+00:00",
+      "path": "<WORKTREE>\\.git\\trailbun\\receipts\\d8fa0e5750ed4b9bb89f6aad63256761.json"
+    },
+    {
+      "id": "21fa63104f00447d8cd83c1d295ecdef",
+      "run_id": "acee7155-40bc-431a-88b6-df091399205d",
+      "revision": 1,
+      "contract_digest": "24b65ecbb99785ec33a7cd14156d7c7ef27568e8d26b7534df9cebeed3b1585f",
+      "artifact_fingerprint": "460eb38191e2130887b30eff3fb767e2a71bc403c8fc4b3062ba1005460cff94",
+      "status": "violation",
+      "baseline": false,
+      "timestamp": "2026-09-08T21:28:58.928212+00:00",
+      "path": "<WORKTREE>\\.git\\trailbun\\receipts\\21fa63104f00447d8cd83c1d295ecdef.json"
+    },
+    {
+      "id": "9ca1f004f28a4dfaaab5e3d6db963b3e",
+      "run_id": "acee7155-40bc-431a-88b6-df091399205d",
+      "revision": 1,
+      "contract_digest": "24b65ecbb99785ec33a7cd14156d7c7ef27568e8d26b7534df9cebeed3b1585f",
+      "artifact_fingerprint": "910496d4f69c6d16caa91eaaa0f526ae94aa7e402275bc1e0a2360a692797a41",
+      "status": "violation",
+      "baseline": false,
+      "timestamp": "2026-09-08T21:28:59.872062+00:00",
+      "path": "<WORKTREE>\\.git\\trailbun\\receipts\\9ca1f004f28a4dfaaab5e3d6db963b3e.json"
+    }
+  ],
+  "failures": {
+    "acceptance": {
+      "fingerprints": [
+        "460eb38191e2130887b30eff3fb767e2a71bc403c8fc4b3062ba1005460cff94",
+        "910496d4f69c6d16caa91eaaa0f526ae94aa7e402275bc1e0a2360a692797a41"
+      ],
+      "count": 2
+    }
+  },
+  "needs_diagnosis": true,
+  "baseline_recorded": true
+}

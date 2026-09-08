@@ -1,0 +1,8 @@
+diff --git a/app/money.py b/app/money.py
+index a60024e..904fc68 100644
+--- a/app/money.py
++++ b/app/money.py
+@@ -1,2 +1,2 @@
+ def money_total(values):
+-    return 0.0
++    return round(sum(float(v) for v in values), 2)

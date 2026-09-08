@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "original_status": "incomplete",
+  "original_report": "native-codex-corrected-trust.json",
+  "original_report_sha256": "9ed346450c29a8b1d1b2b5bad17c62db5ab8fbd6a2d4df9a7bf2d429b2e12455",
+  "reassessed_at": "2026-09-08T22:17:36.224005+00:00",
+  "checks": {
+    "native_allowed_patch": true,
+    "external_allowed_file": true,
+    "external_protected_sentinel": true,
+    "native_router_rejection_exact_input": true,
+    "bound_to_successful_native_resume": true,
+    "native_thread_matches_denial": true,
+    "no_timeout_or_inspection_errors": true,
+    "sources_stable": true,
+    "global_config_unchanged": true
+  },
+  "reason": "Codex PreToolUse denial returns before the patch handler emits file_change events. Its native router error, exact patch fingerprint, bound hook receipt and external file checks establish the rejected write.",
+  "verifier": "scripts/native_smoke.py --reassess",
+  "verifier_sha256": "660f613b34f8b323eeeaf201f77975d66a7f0eca2aa0bfe8d34e85abd31e7145",
+  "native_router_denials": [
+    {
+      "source": "codex_core::tools::router",
+      "reason": "Trailbun scope violation: protected/outside.txt",
+      "input_fingerprint": "a7b4b8b9a8144ef1598162350254560a95fcab84157ac02544bb44da92d10f91",
+      "targets": [
+        "protected/outside.txt"
+      ]
+    }
+  ],
+  "limits": [
+    "One isolated allowed native patch plus one protected native patch only",
+    "No universal shell/MCP enforcement, compaction, resume or cross-platform claim",
+    "A model's natural-language refusal is not a native rejected-write receipt"
+  ],
+  "sources": [
+    "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/core/src/tools/registry.rs#L527",
+    "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/core/src/hook_runtime.rs#L217"
+  ]
+}

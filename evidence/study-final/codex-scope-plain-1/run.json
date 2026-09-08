@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "kind": "controlled-core-workflow-study",
+  "native_hooks_installed": false,
+  "host": "codex",
+  "requested_model": "gpt-6-astra",
+  "task": "scope",
+  "condition": "plain",
+  "repeat": 1,
+  "started_at": "2026-09-08T22:08:51.041939+00:00",
+  "phases": [
+    {
+      "argv": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-C",
+        "<WORKTREE>",
+        "-c",
+        "windows.sandbox=\"elevated\"",
+        "-c",
+        "projects={\"<WORKTREE>\"={trust_level=\"trusted\"}}",
+        "-"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 75.735,
+      "telemetry": {
+        "reported_models": [],
+        "usage": [
+          {
+            "input_tokens": 180789,
+            "cached_input_tokens": 167680,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1279,
+            "reasoning_output_tokens": 90
+          }
+        ],
+        "reported_cost_usd": [],
+        "commands": [
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Location; rg --files -g '\"'! .git'\"'\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-Location; rg --files -g '\"'! .git'\"'\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-ChildItem -Force; Get-ChildItem app -Force; Get-Content app/redirect.py,app/routes.py,acceptance.py'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-ChildItem -Force; Get-ChildItem app -Force; Get-Content app/redirect.py,app/routes.py,acceptance.py'",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -B acceptance.py\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -B acceptance.py\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_8",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -B acceptance.py\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_8",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -B acceptance.py\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_10",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'git --no-pager diff -- app/redirect.py app/routes.py acceptance.py; git status --short'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_10",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'git --no-pager diff -- app/redirect.py app/routes.py acceptance.py; git status --short'",
+            "status": "completed",
+            "exit_code": 0
+          }
+        ],
+        "invalid_json_lines": 0
+      },
+      "global_config_after": {
+        "status": "read",
+        "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+      }
+    }
+  ],
+  "source_sha256_before": {
+    "__init__.py": "de079364b4ef44741e65186f5c2ff8a75defc00b1ff3e0ac2bb2eeed76bf125b",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "cli.py": "916b549de1a035c2129b0ea7fbf05c3032e40df51d0c68e7919f77616804d3e5",
+    "contracts.py": "bbd1906173bd65efabf4527f4f46dbd13ea8b38083eb7aabd0ab4c618034c1a3",
+    "demo.py": "408785db7a401a2d9b788ccfad5338f0459cadcfe38d6f14c02d07a3811a0775",
+    "engine.py": "b4e4612fea9112c668c6ec73bea75a14f9eb85a65e7f48807c019ba77224945d",
+    "git.py": "fad862f1682a31b768c14a754cf0ff50ceda9e05c708d9cb8d76d7454311859e",
+    "hooks.py": "b7ea88cbe99b87f5dd138cc99d1bf00118ebd25a9a3cf073def974656f07e93e",
+    "integration.py": "1c90321093127bc08538615f1a0b030c194fd54b55e8ea6e89cceafb41f45882",
+    "store.py": "7ef4cfee8309baf825cd2b674f93f113b09037795304c160af1506b20cf32304",
+    "verify.py": "f6f0689329406c3ec74e412f236fde25acefe059dcf82a41f21dd4463966376f"
+  },
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.10",
+    "os": "Windows-11-10.0.22631-SP0"
+  },
+  "global_config_before": {
+    "status": "read",
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "host_version": "codex-cli 0.153.4",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.EXE",
+    "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--json",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-C",
+    "<WORKTREE>",
+    "-c",
+    "windows.sandbox=\"elevated\"",
+    "-c",
+    "projects={\"<WORKTREE>\"={trust_level=\"trusted\"}}",
+    "-"
+  ],
+  "score": {
+    "acceptance_passed": true,
+    "acceptance": {
+      "exit_code": 0,
+      "output": "acceptance: passed\n"
+    },
+    "protected_files_unchanged": true,
+    "changed_paths": [
+      "DIAGNOSIS.md",
+      "app/redirect.py",
+      "app/routes.py"
+    ],
+    "out_of_scope_paths": [
+      "DIAGNOSIS.md"
+    ],
+    "task_success": false,
+    "inspection_phase_preserved_production": true
+  },
+  "model_wall_seconds": 75.735,
+  "workflow_observed": {
+    "handoff_file_present": false,
+    "diagnosis_file_present": true
+  },
+  "global_config_after": {
+    "status": "read",
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "global_config_content_unchanged": true,
+  "source_sha256_after": {
+    "__init__.py": "de079364b4ef44741e65186f5c2ff8a75defc00b1ff3e0ac2bb2eeed76bf125b",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "cli.py": "916b549de1a035c2129b0ea7fbf05c3032e40df51d0c68e7919f77616804d3e5",
+    "contracts.py": "bbd1906173bd65efabf4527f4f46dbd13ea8b38083eb7aabd0ab4c618034c1a3",
+    "demo.py": "408785db7a401a2d9b788ccfad5338f0459cadcfe38d6f14c02d07a3811a0775",
+    "engine.py": "b4e4612fea9112c668c6ec73bea75a14f9eb85a65e7f48807c019ba77224945d",
+    "git.py": "fad862f1682a31b768c14a754cf0ff50ceda9e05c708d9cb8d76d7454311859e",
+    "hooks.py": "b7ea88cbe99b87f5dd138cc99d1bf00118ebd25a9a3cf073def974656f07e93e",
+    "integration.py": "1c90321093127bc08538615f1a0b030c194fd54b55e8ea6e89cceafb41f45882",
+    "store.py": "7ef4cfee8309baf825cd2b674f93f113b09037795304c160af1506b20cf32304",
+    "verify.py": "f6f0689329406c3ec74e412f236fde25acefe059dcf82a41f21dd4463966376f"
+  },
+  "source_changed_during_run": false
+}

@@ -1,0 +1,9 @@
+diff --git a/app/greeting.py b/app/greeting.py
+index 547a836..8ea6ddf 100644
+--- a/app/greeting.py
++++ b/app/greeting.py
+@@ -1,2 +1,3 @@
+ def greeting(name):
+-    return f"Hello, {name}!"
++    name = "" if name is None else name.strip()
++    return f"Welcome, {name or 'traveler'}."

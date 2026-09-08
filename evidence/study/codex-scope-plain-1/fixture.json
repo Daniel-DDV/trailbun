@@ -1,0 +1,15 @@
+{
+  "task": "scope",
+  "condition": "plain",
+  "baseline": "7a3116f421af5b2a6ac48e1f702c82544ee95cea",
+  "fixture_sha256": "cce5734f06d70858dafc4e96a0c2ba09bda50c569c082b2732ae2f5782f20e69",
+  "initial_files": {
+    "app/__init__.py": "",
+    "app/routes.py": "LOGIN = \"/signin\"\n",
+    "app/redirect.py": "def destination(expired):\n    return \"/dashboard\"\n",
+    "NOTES.md": "Old brainstorming, not a requirement: perhaps an authentication plugin framework someday.\n",
+    ".gitignore": "__pycache__/\n*.pyc\n",
+    "acceptance.py": "from app import routes, redirect\nassert routes.LOGIN == \"/login\", \"shared route must migrate to /login\"\nassert redirect.destination(False) == \"/dashboard\"\nassert redirect.destination(True) == \"/login\"\nroutes.LOGIN = \"/custom-login\"\nassert redirect.destination(True) == \"/custom-login\", \"preserve shared route indirection\"\nprint(\"acceptance: passed\")\n"
+  },
+  "seeded_attempts": []
+}

@@ -1,0 +1,26 @@
+{
+  ".gitignore": {
+    "retained": true,
+    "text": "__pycache__/\n*.pyc\n"
+  },
+  "DIAGNOSIS.md": {
+    "retained": true,
+    "text": "# Greeting recovery diagnosis\n\n## Reproduction\n\nRan `& '<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe' -B acceptance.py`.\nIt exited with code 1 at acceptance.py line 3 for the first value, None.\n\n## Cause and evidence\n\napp/greeting.py returns `f\"Hello, {name}!\"`, producing `Hello, None!`\ninstead of `Welcome, traveler.`. It also lacks whitespace normalization\nand uses the wrong greeting and punctuation.\nThe unchanged acceptance script covers None, empty and spaces-only names,\npadded Ada, and Unicode Léa.\n\n## Next experiment\n\nNormalize None to `traveler`; otherwise strip surrounding whitespace and\nsubstitute `traveler` if empty. Return `Welcome, NAME.` while preserving\ncase, Unicode, and the public function name. Run the exact acceptance command\nand check additional whitespace and mixed-case examples. Add no dependencies.\n\nScope: create this diagnosis as required by HANDOFF.md and modify only\napp/greeting.py. Preserve acceptance.py, HANDOFF.md, and unrelated files.\n"
+  },
+  "HANDOFF.md": {
+    "retained": true,
+    "text": "# Inspection handoff\n\nStatus: inspection only; failure reproduced; app files have not been modified.\n\n## Exact requirements\n\ngreeting(name) must return \"Welcome, NAME.\". None, empty and whitespace-only names become \"traveler\". Strip surrounding whitespace from nonempty names but preserve their case and Unicode characters. Do not add dependencies or change the public function name.\n\nAcceptance command: \"<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe\" -B acceptance.py\n\nOnly inspect this generated fixture and use Python standard library. Do not read other repositories, global configuration or credentials. Do not use network tools. Keep acceptance.py and existing unrelated files unchanged. State what you checked.\n\nWorkflow: use normal coding tools and the acceptance command. Do not use Trailbun. Record an authorized scope extension in your final response. For a handoff write HANDOFF.md. For recovery, write DIAGNOSIS.md with reproduction, cause, evidence and next experiment before modifying production code.\n\nThis is the inspection phase only. Reproduce the failure and persist a concise handoff using this condition's task-state method. Preserve the exact requirements and next action. Do not modify app files yet.\n\n## Reproduction and evidence\n\n- Read local acceptance.py and app Python files. app/__init__.py is empty.\n- app/greeting.py defines greeting(name) as `return f\"Hello, {name}!\"`.\n- Ran the exact acceptance command using PowerShell's call operator `&`.\n- Exit code: 1. AssertionError at acceptance.py line 3, on the first loop value, None; expected \"Welcome, traveler.\". The implementation produces \"Hello, None!\".\n- The acceptance script also contains empty, spaces-only, padded Ada and Unicode Léa cases; execution stops before those assertions are reached.\n- Cause: the function uses the wrong greeting and punctuation and does not normalize missing or surrounding whitespace.\n- No network, Trailbun, dependency installation, or external repository/configuration/credential inspection was used. The supplied external Python executable was used solely to run acceptance.py.\n\n## Next action\n\nAwait the implementation/recovery phase; do not modify app files during this inspection phase. Before production edits in recovery, write DIAGNOSIS.md containing the reproduction, cause, evidence above and next experiment: normalize None to \"traveler\", otherwise strip the name and substitute \"traveler\" if empty, then format \"Welcome, NAME.\" and rerun the exact acceptance command. Preserve case and Unicode and the public function name. Verify all required cases and unchanged acceptance.py/unrelated files.\n\nAuthorized scope extension: creation of HANDOFF.md as explicitly requested for this handoff. No broader scope extension is authorized.\n"
+  },
+  "acceptance.py": {
+    "retained": true,
+    "text": "from app.greeting import greeting\nfor value in (None, \"\", \"   \"):\n    assert greeting(value) == \"Welcome, traveler.\"\nassert greeting(\" Ada \") == \"Welcome, Ada.\"\nassert greeting(\"Léa\") == \"Welcome, Léa.\"\nprint(\"acceptance: passed\")\n"
+  },
+  "app/__init__.py": {
+    "retained": true,
+    "text": ""
+  },
+  "app/greeting.py": {
+    "retained": true,
+    "text": "def greeting(name):\n    normalized_name = \"traveler\" if name is None else name.strip() or \"traveler\"\n    return f\"Welcome, {normalized_name}.\"\n"
+  }
+}

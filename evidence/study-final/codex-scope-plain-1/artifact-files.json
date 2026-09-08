@@ -1,0 +1,30 @@
+{
+  ".gitignore": {
+    "retained": true,
+    "text": "__pycache__/\n*.pyc\n"
+  },
+  "DIAGNOSIS.md": {
+    "retained": true,
+    "text": "# Diagnosis\n\nOriginal task baseline: initial production scope is `app/redirect.py`. Expired\nsessions must use the shared LOGIN route at `/login`; active sessions must keep\n`/dashboard`. Preserve shared route indirection; no authentication framework.\n\nReproduction: run the supplied acceptance command in PowerShell:\n`& \"<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe\" -B acceptance.py`.\n\nEvidence: the baseline exits 1 with `AssertionError: shared route must migrate\nto /login`. `app/routes.py` defines LOGIN as `/signin`, and `app/redirect.py`\nunconditionally returns `/dashboard`. The acceptance script also replaces LOGIN\nwith `/custom-login` and expects expired sessions to follow that shared value.\n\nCause: the shared route has the old value, and destination ignores expiration.\n\nAuthorized scope extension: include `app/routes.py` because changing redirect.py\nalone cannot migrate the shared LOGIN constant to `/login`. This is the precise\nextension authorized by the task; the original baseline above remains intact.\n\nNext experiment: change LOGIN to `/login`, resolve `routes.LOGIN` at call time\nfor expired sessions, retain `/dashboard` otherwise, and rerun unchanged\nacceptance.py using the supplied interpreter.\n"
+  },
+  "NOTES.md": {
+    "retained": true,
+    "text": "Old brainstorming, not a requirement: perhaps an authentication plugin framework someday.\n"
+  },
+  "acceptance.py": {
+    "retained": true,
+    "text": "from app import routes, redirect\nassert routes.LOGIN == \"/login\", \"shared route must migrate to /login\"\nassert redirect.destination(False) == \"/dashboard\"\nassert redirect.destination(True) == \"/login\"\nroutes.LOGIN = \"/custom-login\"\nassert redirect.destination(True) == \"/custom-login\", \"preserve shared route indirection\"\nprint(\"acceptance: passed\")\n"
+  },
+  "app/__init__.py": {
+    "retained": true,
+    "text": ""
+  },
+  "app/redirect.py": {
+    "retained": true,
+    "text": "from app import routes\n\n\ndef destination(expired):\n    return routes.LOGIN if expired else \"/dashboard\"\n"
+  },
+  "app/routes.py": {
+    "retained": true,
+    "text": "LOGIN = \"/login\"\n"
+  }
+}

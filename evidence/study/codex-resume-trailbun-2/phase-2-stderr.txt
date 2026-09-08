@@ -1,0 +1,1 @@
+2026-09-08T21:29:41.098429Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`\\\"C:\\\\\\\\Program Files\\\\\\\\PowerShell\\\\\\\\7\\\\\\\\pwsh.exe\\\" -Command \\\"& '<TRAILBUN_SOURCE>\\\\\\\\.venv\\\\\\\\Scripts\\\\\\\\python.exe' -m trailbun resume\\\"` rejected: blocked by policy\")" }

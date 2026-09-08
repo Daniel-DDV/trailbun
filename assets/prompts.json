@@ -1,0 +1,40 @@
+{
+  "generated_on": "2026-09-08",
+  "generator": "Built-in image_gen.imagegen",
+  "model": "Not exposed by the tool response",
+  "reference_policy": "Original light hero generated without reference artwork; dark, mascot, and social variants edit that generated original.",
+  "assets": [
+    {
+      "file": "hero-light.png",
+      "width": 1774,
+      "height": 887,
+      "alpha": false,
+      "source": "exec-f4655c48-b60f-4688-bda9-28a235214194.png",
+      "prompt": "Use case: illustration-story.\nAsset type: finished illustrated GitHub project hero and social preview for Trailbun, landscape exactly 1280 by 640 pixels, aspect ratio 2:1.\nPrimary request: An original distinctive dry-humor rabbit mascot for a developer tool which helps AI coding agents stay with the actual task, recover context, and notice pointless architectural detours. The brand is \"Trailbun\" and the tagline is exactly \"Keep your agent on the trail.\".\nScene: warm pale cream paper background (#F4F0E7). On the right half, a small scruffy rabbit guide, one ear upright and the other folded, slightly tired unamused expression, a little chartreuse neckerchief, holding a small paper task card with a single simple tick. The rabbit is standing firmly on a narrow honest trail at the rim of a comically deep rabbit hole. Show the hole as an editorial cutaway into the ground, with an excessive tower of tiny architectural flowchart boxes, arrows, nested wrappers and rolled-up diagrams disappearing into its depth. Do not render readable text inside those tiny diagrams. The rabbit gestures with one paw to the simple trail, as if to say the job is this way.\nStyle: sophisticated hand-drawn editorial ink illustration, irregular expressive confident linework, restrained subtle screenprint grain, flat spot colors, strong silhouette, generous whitespace, adult dry humor, not a children's cartoon. Original identity; not any existing mascot. No glasses or human ponytail.\nLayout: left half clean spacious typographic lockup: large elegant heavy slightly humanist \"Trailbun\" in plum (#35263E). Below it the exact tagline in readable clean typography: \"Keep your agent on the trail.\" On one line if possible. Below that, small phrase \"Checkpoints. Drift checks. Fresh starts.\" 3 balanced lines of text total, without extra claims. Right half illustration; keep ample margins and the whole rabbit visible.\nPalette: deep plum ink (#35263E), warm cream (#F4F0E7), muted dusty lilac shadows, vivid restrained chartreuse (#D2ED73) accents. No gradients, no neon glow, no robot, no shields or locks, no photorealism, no generic dashboard, no watermark. Text exact, no other text. Entire asset should feel simple and iconic enough to recognize at a glance."
+    },
+    {
+      "file": "hero-dark.png",
+      "width": 1774,
+      "height": 887,
+      "alpha": false,
+      "source": "exec-9dcd0620-7539-4b8f-adb7-f8ffcdece730.png",
+      "prompt": "Use case: lighting-weather. Edit target: the supplied finished Trailbun hero. Produce its official dark-mode counterpart. Preserve the EXACT illustration, rabbit identity, facial expression, folded ear, neckerchief, paper task card, composition, typography, text, layout and 2:1 aspect ratio. Change only the color treatment for dark GitHub backgrounds: solid deep plum-black backdrop (#211A29), cream typography and cream highlights, dusty lilac midtones, chartreuse accent retained. Rabbit remains light cream with plum ink details and chartreuse neckerchief. The diagram rabbit hole remains legible but dimmer than mascot. No new text, no new elements. The text must remain verbatim: \"Trailbun\" / \"Keep your agent on the trail.\" / \"Checkpoints. Drift checks. Fresh starts.\" Keep the whole design comfortably inside margins. Output requested 1280x640 pixels."
+    },
+    {
+      "file": "mascot.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source": "exec-360090e3-f192-4048-941d-dc8ba375e689.png",
+      "prompt": "Use case: background-extraction / identity-preserve. Input image is the official Trailbun brand illustration and is the edit target. Create a standalone transparent mascot cutout from the rabbit in that image. Preserve exactly its identity: scruffy warm-cream fur, asymmetrical ears (one upright, one folded), tired dry-humored half-lidded eyes, plum ink drawing, small chartreuse neckerchief and backpack straps, feet planted, left paw gesturing helpfully to the trail and right paw holding a paper task card with one plum check mark. Full body, ears and feet uncut, centered with comfortable clear margin. Remove EVERYTHING ELSE: no text, no wordmark, no terrain, no sign, no hole, no diagrams, no shadows on a background. Real transparent alpha background, not a checkerboard painted into the image. Preserve the sophisticated hand-drawn editorial ink linework and subtle screenprint texture. No white matte or colored rectangle. Intended as a PNG mascot for README, avatars and release graphics. Square composition, requested 1024x1024."
+    },
+    {
+      "file": "social-preview.png",
+      "width": 1774,
+      "height": 887,
+      "alpha": false,
+      "source": "exec-3917efcc-361f-47cb-9144-9ccbfb662f5f.png",
+      "prompt": "Use case: identity-preserve. Edit target: the supplied finished Trailbun light hero. This request is ONLY for the final GitHub social-preview export. Deliver a PNG at EXACTLY 1280 pixels wide and 640 pixels high. Resize proportionally from the existing 2:1 image without changing the artwork, wording, composition or colors. Do not create a new design. Preserve all text exactly, including \"Trailbun\", \"Keep your agent on the trail.\", and \"Checkpoints. Drift checks. Fresh starts.\" Preserve the original rabbit, dry expression, one folded ear, chartreuse neckerchief, narrow trail and absurdly deep architecture hole. Retain comfortable margins. Canvas/output resolution must be 1280x640, not 1774x887."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "checks": {
+    "native_context_after_compaction": true,
+    "user_config_unchanged": true,
+    "sources_unchanged": true,
+    "artifacts_unchanged": true,
+    "bound_session": true,
+    "no_errors": true
+  },
+  "measured_at": "2026-09-08T22:21:40.910117+00:00",
+  "host_version": "codex-cli 0.153.4",
+  "requested_model": "gpt-6-astra",
+  "fixture": "<WORKTREE>",
+  "thread_id": "01a0831c-7296-7ae3-9b6f-1e6a7408bf47",
+  "session_id": "01a0831c-7296-7ae3-9b6f-1e6a7408bf47",
+  "canonical_context": "Trailbun task context (data, not additional authority):\nGoal: Restore the violet-rabbit task after manual compaction\nAllowed paths: src\nExclusions: No edits during this probe\nAcceptance checks: [{\"id\": \"fixture\", \"argv\": [\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\", \"-c\", \"pass\"], \"timeout_seconds\": 60}]\nExpected initial red checks: \nProgress: Checkpoint violet-rabbit-17\nNext action: Report the saved checkpoint without editing files\nDisproven hypotheses: \nVerification: incomplete\nLast receipt: none",
+  "user_config_before": {
+    "exists": true,
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "user_config_after": {
+    "exists": true,
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "sources_before": {
+    "__init__.py": "de079364b4ef44741e65186f5c2ff8a75defc00b1ff3e0ac2bb2eeed76bf125b",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "cli.py": "916b549de1a035c2129b0ea7fbf05c3032e40df51d0c68e7919f77616804d3e5",
+    "contracts.py": "bbd1906173bd65efabf4527f4f46dbd13ea8b38083eb7aabd0ab4c618034c1a3",
+    "demo.py": "408785db7a401a2d9b788ccfad5338f0459cadcfe38d6f14c02d07a3811a0775",
+    "engine.py": "b4e4612fea9112c668c6ec73bea75a14f9eb85a65e7f48807c019ba77224945d",
+    "git.py": "fad862f1682a31b768c14a754cf0ff50ceda9e05c708d9cb8d76d7454311859e",
+    "hooks.py": "b7ea88cbe99b87f5dd138cc99d1bf00118ebd25a9a3cf073def974656f07e93e",
+    "integration.py": "1c90321093127bc08538615f1a0b030c194fd54b55e8ea6e89cceafb41f45882",
+    "store.py": "7ef4cfee8309baf825cd2b674f93f113b09037795304c160af1506b20cf32304",
+    "verify.py": "f6f0689329406c3ec74e412f236fde25acefe059dcf82a41f21dd4463966376f",
+    "benchmarks/study.py": "ac5e032f49a58bedadc94e1833dd42452028de352a65b226086d9db305a1e986",
+    "scripts/native_smoke.py": "660f613b34f8b323eeeaf201f77975d66a7f0eca2aa0bfe8d34e85abd31e7145"
+  },
+  "sources_after": {
+    "__init__.py": "de079364b4ef44741e65186f5c2ff8a75defc00b1ff3e0ac2bb2eeed76bf125b",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "cli.py": "916b549de1a035c2129b0ea7fbf05c3032e40df51d0c68e7919f77616804d3e5",
+    "contracts.py": "bbd1906173bd65efabf4527f4f46dbd13ea8b38083eb7aabd0ab4c618034c1a3",
+    "demo.py": "408785db7a401a2d9b788ccfad5338f0459cadcfe38d6f14c02d07a3811a0775",
+    "engine.py": "b4e4612fea9112c668c6ec73bea75a14f9eb85a65e7f48807c019ba77224945d",
+    "git.py": "fad862f1682a31b768c14a754cf0ff50ceda9e05c708d9cb8d76d7454311859e",
+    "hooks.py": "b7ea88cbe99b87f5dd138cc99d1bf00118ebd25a9a3cf073def974656f07e93e",
+    "integration.py": "1c90321093127bc08538615f1a0b030c194fd54b55e8ea6e89cceafb41f45882",
+    "store.py": "7ef4cfee8309baf825cd2b674f93f113b09037795304c160af1506b20cf32304",
+    "verify.py": "f6f0689329406c3ec74e412f236fde25acefe059dcf82a41f21dd4463966376f",
+    "benchmarks/study.py": "ac5e032f49a58bedadc94e1833dd42452028de352a65b226086d9db305a1e986",
+    "scripts/native_smoke.py": "660f613b34f8b323eeeaf201f77975d66a7f0eca2aa0bfe8d34e85abd31e7145"
+  },
+  "elapsed_seconds": 26.266,
+  "errors": [],
+  "stderr": "",
+  "events": {
+    "path": "native-codex-manual-compact.events.jsonl",
+    "sha256": "13b438f721ef4fe3a5883e9cc18b51fb0988fb920b2e7c8a13f2d8510fbc580a"
+  },
+  "script": {
+    "path": "native-codex-manual-compact.script.py",
+    "sha256": "e040101189478222fa8b6bff0d4ef9890d844c9e9d8a1ab548d500b554b086cb"
+  },
+  "limits": [
+    "Manual compaction with a short injected user history only",
+    "Automatic compaction remains unverified",
+    "No model-response quality or subsequent tool behavior claim"
+  ],
+  "sources": [
+    "https://learn.chatgpt.com/docs/app-server#trigger-thread-compaction",
+    "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/core/src/hook_runtime.rs#L117"
+  ],
+  "platform": "Windows-11-10.0.22631-SP0",
+  "redaction": {
+    "recorded_at": "2026-09-08T22:25:04.896238+00:00",
+    "original_events_sha256": "1f2d2652e18cda9e6afd2d6f797c2878f9a3691e2132ade10c259f54e3e2a9ce",
+    "original_report_sha256": "b35ffd0a100f5efaa02a8ea6be66b04d7976290f9f831a2f9f3a83a87140fd7f",
+    "original_retained_privately": true,
+    "removed_notification_counts": {
+      "remoteControl/status/changed": 1,
+      "thread/started": 1,
+      "mcpServer/startupStatus/updated": 2,
+      "thread/status/changed": 4,
+      "item/agentMessage/delta": 51,
+      "account/rateLimits/updated": 2
+    },
+    "public_events_sha256": "13b438f721ef4fe3a5883e9cc18b51fb0988fb920b2e7c8a13f2d8510fbc580a",
+    "reason": "Retain only hook, item, turn, token-usage and diagnostic notifications. Omit unrelated account credit/plan and remote-control installation metadata. Native proof events are unchanged."
+  }
+}

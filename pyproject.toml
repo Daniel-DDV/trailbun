@@ -1,9 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "done-is-not-proof"
-version = "0.1.0"
-description = "Evidence-first checks for reliable AI coding-agent harnesses"
-requires-python = ">=3.11"
-license = { text = "MIT" }
+name = "trailbun"
+version = "0.2.0"
+description = "Keep your agent on the trail: task checkpoints, drift checks, and recovery"
+requires-python = ">=3.11,<3.15"
+license = "MIT"
+readme = "README.md"
+dependencies = ["filelock>=3.16,<4"]
+
+[project.urls]
+Repository = "https://github.com/Daniel-DDV/trailbun"
+Issues = "https://github.com/Daniel-DDV/trailbun/issues"
+Changelog = "https://github.com/Daniel-DDV/trailbun/blob/main/CHANGELOG.md"
+
+[project.scripts]
+trailbun = "trailbun.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+trailbun = ["resources/**/*", "skills/*/SKILL.md"]
 
 [project.optional-dependencies]
 test = ["pytest>=8,<9"]
@@ -11,3 +31,4 @@ test = ["pytest>=8,<9"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+pythonpath = ["src", "."]

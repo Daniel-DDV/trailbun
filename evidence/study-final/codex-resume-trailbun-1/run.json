@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "kind": "controlled-core-workflow-study",
+  "native_hooks_installed": false,
+  "host": "codex",
+  "requested_model": "gpt-6-astra",
+  "task": "resume",
+  "condition": "trailbun",
+  "repeat": 1,
+  "started_at": "2026-09-08T22:16:51.801964+00:00",
+  "phases": [
+    {
+      "argv": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-C",
+        "<WORKTREE>",
+        "-c",
+        "windows.sandbox=\"elevated\"",
+        "-c",
+        "projects={\"<WORKTREE>\"={trust_level=\"trusted\"}}",
+        "-"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 50.359,
+      "telemetry": {
+        "reported_models": [],
+        "usage": [
+          {
+            "input_tokens": 94896,
+            "cached_input_tokens": 78848,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 962,
+            "reasoning_output_tokens": 15
+          }
+        ],
+        "reported_cost_usd": [],
+        "commands": [
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun start --contract .trailbun/study-contract.json\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun start --contract .trailbun/study-contract.json\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"rg --files --hidden -g '\"'!.git/**'\"'\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"rg --files --hidden -g '\"'!.git/**'\"'\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun verify --baseline\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun verify --baseline\"",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_5",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-ChildItem -Force; Get-Content .trailbun/study-contract.json; Get-Content app/greeting.py; Get-Content acceptance.py; & '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun checkpoint --help\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_5",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"Get-ChildItem -Force; Get-Content .trailbun/study-contract.json; Get-Content app/greeting.py; Get-Content acceptance.py; & '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun checkpoint --help\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_7",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun checkpoint --summary 'Inspection-only handoff: inspected .trailbun/study-contract.json, app/greeting.py and acceptance.py. greeting(name) currently returns Hello, {name}\"'! without normalization. Baseline verify reproduced acceptance.py:3 AssertionError; expected_red_observed=true; needs_diagnosis=false. Evidence: receipt:c046472a3f9e4e43908e82b26601cdb1. Exact requirements: greeting(name) must return \"Welcome, NAME.\". None, empty and whitespace-only names become \"traveler\". Strip surrounding whitespace from nonempty names but preserve their case and Unicode characters. Do not add dependencies or change the public function name. Keep acceptance.py and existing unrelated files unchanged. Only inspect this generated fixture and use Python standard library; do not read other repositories, global configuration or credentials; do not use network tools. No app files modified.'\"' --next-action 'In the implementation phase, modify only app/greeting.py to normalize None and stripped-empty names to traveler, preserve stripped nonempty case and Unicode, and return Welcome, NAME. Run acceptance using <TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe -B acceptance.py. Use that exact interpreter for all Trailbun commands; checkpoint progress, inspect with check, and run verify before finishing. If diagnosis is required, run diagnose with --reproduction, --cause, --evidence naming a real nonempty local file or receipt:<id>, and --next-action before production edits (recovery fixture evidence: .git/prior-attempts.json). Any authorized scope extension requires updating .trailbun/study-contract.json and amend --contract with explicit --reason. Current phase ends with this handoff; do not edit app files yet.'\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_7",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun checkpoint --summary 'Inspection-only handoff: inspected .trailbun/study-contract.json, app/greeting.py and acceptance.py. greeting(name) currently returns Hello, {name}\"'! without normalization. Baseline verify reproduced acceptance.py:3 AssertionError; expected_red_observed=true; needs_diagnosis=false. Evidence: receipt:c046472a3f9e4e43908e82b26601cdb1. Exact requirements: greeting(name) must return \"Welcome, NAME.\". None, empty and whitespace-only names become \"traveler\". Strip surrounding whitespace from nonempty names but preserve their case and Unicode characters. Do not add dependencies or change the public function name. Keep acceptance.py and existing unrelated files unchanged. Only inspect this generated fixture and use Python standard library; do not read other repositories, global configuration or credentials; do not use network tools. No app files modified.'\"' --next-action 'In the implementation phase, modify only app/greeting.py to normalize None and stripped-empty names to traveler, preserve stripped nonempty case and Unicode, and return Welcome, NAME. Run acceptance using <TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe -B acceptance.py. Use that exact interpreter for all Trailbun commands; checkpoint progress, inspect with check, and run verify before finishing. If diagnosis is required, run diagnose with --reproduction, --cause, --evidence naming a real nonempty local file or receipt:<id>, and --next-action before production edits (recovery fixture evidence: .git/prior-attempts.json). Any authorized scope extension requires updating .trailbun/study-contract.json and amend --contract with explicit --reason. Current phase ends with this handoff; do not edit app files yet.'\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_8",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun check\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_8",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun check\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_9",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun verify\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_9",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& '<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe' -m trailbun verify\"",
+            "status": "failed",
+            "exit_code": 1
+          }
+        ],
+        "invalid_json_lines": 0
+      },
+      "production_edits_before_handoff": [],
+      "global_config_after": {
+        "status": "read",
+        "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+      }
+    },
+    {
+      "argv": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-C",
+        "<WORKTREE>",
+        "-c",
+        "windows.sandbox=\"elevated\"",
+        "-c",
+        "projects={\"<WORKTREE>\"={trust_level=\"trusted\"}}",
+        "-"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 62.687,
+      "telemetry": {
+        "reported_models": [],
+        "usage": [
+          {
+            "input_tokens": 139087,
+            "cached_input_tokens": 112512,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 971,
+            "reasoning_output_tokens": 20
+          }
+        ],
+        "reported_cost_usd": [],
+        "commands": [
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun resume\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_2",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun resume\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-Location; rg --files -g AGENTS.md -g \"*handoff*\" -g \"*task*\" -g \"acceptance.py\" -g \"README*\" '",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_3",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-Location; rg --files -g AGENTS.md -g \"*handoff*\" -g \"*task*\" -g \"acceptance.py\" -g \"README*\" '",
+            "status": "failed",
+            "exit_code": 1
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-ChildItem -Force -Name; Get-Content app/greeting.py; Get-Content acceptance.py; Get-Content .trailbun/study-contract.json; if (Test-Path AGENTS.md) { Get-Content AGENTS.md }; if (Test-Path app/AGENTS.md) { Get-Content app/AGENTS.md }'",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_4",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command 'Get-ChildItem -Force -Name; Get-Content app/greeting.py; Get-Content acceptance.py; Get-Content .trailbun/study-contract.json; if (Test-Path AGENTS.md) { Get-Content AGENTS.md }; if (Test-Path app/AGENTS.md) { Get-Content app/AGENTS.md }'",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_5",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun --help\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_5",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun --help\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_8",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -B acceptance.py\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_8",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -B acceptance.py\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_9",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun checkpoint --help\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_9",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun checkpoint --help\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_10",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"git diff -- app/greeting.py acceptance.py; git status --short; & \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun checkpoint --summary \\\"Implemented exact recorded greeting requirement in app/greeting.py only: strip names, use traveler for None or stripped-empty input, preserve case and Unicode, return Welcome, NAME. Acceptance passed. Independent review delegation attempted but unavailable due to tool thread error.\\\" --next-action \\\"Run trailbun check and verify; confirm acceptance.py unchanged.\\\"\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_10",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"git diff -- app/greeting.py acceptance.py; git status --short; & \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun checkpoint --summary \\\"Implemented exact recorded greeting requirement in app/greeting.py only: strip names, use traveler for None or stripped-empty input, preserve case and Unicode, return Welcome, NAME. Acceptance passed. Independent review delegation attempted but unavailable due to tool thread error.\\\" --next-action \\\"Run trailbun check and verify; confirm acceptance.py unchanged.\\\"\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_11",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun check\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_11",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun check\"",
+            "status": "completed",
+            "exit_code": 0
+          },
+          {
+            "id": "item_12",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun verify\"",
+            "status": "in_progress",
+            "exit_code": null
+          },
+          {
+            "id": "item_12",
+            "command": "\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\" -Command \"& \\\"<TRAILBUN_SOURCE>\\\\.git\\\\native-venv\\\\Scripts\\\\python.exe\\\" -m trailbun verify\"",
+            "status": "completed",
+            "exit_code": 0
+          }
+        ],
+        "invalid_json_lines": 0
+      },
+      "global_config_after": {
+        "status": "read",
+        "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+      }
+    }
+  ],
+  "source_sha256_before": {
+    "__init__.py": "de079364b4ef44741e65186f5c2ff8a75defc00b1ff3e0ac2bb2eeed76bf125b",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "cli.py": "916b549de1a035c2129b0ea7fbf05c3032e40df51d0c68e7919f77616804d3e5",
+    "contracts.py": "bbd1906173bd65efabf4527f4f46dbd13ea8b38083eb7aabd0ab4c618034c1a3",
+    "demo.py": "408785db7a401a2d9b788ccfad5338f0459cadcfe38d6f14c02d07a3811a0775",
+    "engine.py": "b4e4612fea9112c668c6ec73bea75a14f9eb85a65e7f48807c019ba77224945d",
+    "git.py": "fad862f1682a31b768c14a754cf0ff50ceda9e05c708d9cb8d76d7454311859e",
+    "hooks.py": "b7ea88cbe99b87f5dd138cc99d1bf00118ebd25a9a3cf073def974656f07e93e",
+    "integration.py": "1c90321093127bc08538615f1a0b030c194fd54b55e8ea6e89cceafb41f45882",
+    "store.py": "7ef4cfee8309baf825cd2b674f93f113b09037795304c160af1506b20cf32304",
+    "verify.py": "f6f0689329406c3ec74e412f236fde25acefe059dcf82a41f21dd4463966376f"
+  },
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.10",
+    "os": "Windows-11-10.0.22631-SP0"
+  },
+  "global_config_before": {
+    "status": "read",
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "host_version": "codex-cli 0.153.4",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.EXE",
+    "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--json",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-C",
+    "<WORKTREE>",
+    "-c",
+    "windows.sandbox=\"elevated\"",
+    "-c",
+    "projects={\"<WORKTREE>\"={trust_level=\"trusted\"}}",
+    "-"
+  ],
+  "score": {
+    "acceptance_passed": true,
+    "acceptance": {
+      "exit_code": 0,
+      "output": "acceptance: passed\n"
+    },
+    "protected_files_unchanged": true,
+    "changed_paths": [
+      "app/greeting.py"
+    ],
+    "out_of_scope_paths": [],
+    "task_success": true,
+    "inspection_phase_preserved_production": true
+  },
+  "model_wall_seconds": 113.046,
+  "workflow_observed": {
+    "verification_current": true,
+    "amendments": 0,
+    "diagnoses": 0,
+    "checkpoint_recorded": true
+  },
+  "global_config_after": {
+    "status": "read",
+    "sha256": "8baaf797779785999c3c9d509659f711a8b140339bf05fdcc9f6dddde82ef8c9"
+  },
+  "global_config_content_unchanged": true,
+  "source_sha256_after": {
+    "__init__.py": "de079364b4ef44741e65186f5c2ff8a75defc00b1ff3e0ac2bb2eeed76bf125b",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "cli.py": "916b549de1a035c2129b0ea7fbf05c3032e40df51d0c68e7919f77616804d3e5",
+    "contracts.py": "bbd1906173bd65efabf4527f4f46dbd13ea8b38083eb7aabd0ab4c618034c1a3",
+    "demo.py": "408785db7a401a2d9b788ccfad5338f0459cadcfe38d6f14c02d07a3811a0775",
+    "engine.py": "b4e4612fea9112c668c6ec73bea75a14f9eb85a65e7f48807c019ba77224945d",
+    "git.py": "fad862f1682a31b768c14a754cf0ff50ceda9e05c708d9cb8d76d7454311859e",
+    "hooks.py": "b7ea88cbe99b87f5dd138cc99d1bf00118ebd25a9a3cf073def974656f07e93e",
+    "integration.py": "1c90321093127bc08538615f1a0b030c194fd54b55e8ea6e89cceafb41f45882",
+    "store.py": "7ef4cfee8309baf825cd2b674f93f113b09037795304c160af1506b20cf32304",
+    "verify.py": "f6f0689329406c3ec74e412f236fde25acefe059dcf82a41f21dd4463966376f"
+  },
+  "source_changed_during_run": false
+}

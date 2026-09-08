@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "run_id": "ec165b4a-ab5f-4ec1-b8f7-1412e593e1ba",
+  "contract": {
+    "goal": "Implement the agreed greeting behavior after a fresh-session handoff.",
+    "exclusions": [
+      "No unrelated architecture or dependencies; preserve acceptance.py"
+    ],
+    "allowed_paths": [
+      "app/greeting.py"
+    ],
+    "watch_ignored": [],
+    "checks": [
+      {
+        "id": "acceptance",
+        "argv": [
+          "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+          "-B",
+          "acceptance.py"
+        ],
+        "timeout_seconds": 15
+      }
+    ],
+    "expected_red": [
+      "acceptance"
+    ]
+  },
+  "revision": 1,
+  "baseline": "38f9f0c1d0621a01e936ffee8e3f40e2efc3faf7",
+  "initial_fingerprint": "d375ae375887b864857788bf21a1d43de2be0d4f46389fa50ea98cba940027a9",
+  "baseline_watched": {},
+  "created_at": "2026-09-08T22:17:01.540913+00:00",
+  "contract_history": [],
+  "progress": {
+    "summary": "Implemented exact recorded greeting requirement in app/greeting.py only: strip names, use traveler for None or stripped-empty input, preserve case and Unicode, return Welcome, NAME. Acceptance passed. Independent review delegation attempted but unavailable due to tool thread error.",
+    "next_action": "Run trailbun check and verify; confirm acceptance.py unchanged.",
+    "failed_hypotheses": [],
+    "updated_at": "2026-09-08T22:18:36.242561+00:00"
+  },
+  "receipts": [
+    {
+      "id": "c046472a3f9e4e43908e82b26601cdb1",
+      "run_id": "ec165b4a-ab5f-4ec1-b8f7-1412e593e1ba",
+      "revision": 1,
+      "contract_digest": "02edcae68eefaae5e90bbeefebbc3e2c39d26aa3f8ece067b47945afa4afed7e",
+      "artifact_fingerprint": "d375ae375887b864857788bf21a1d43de2be0d4f46389fa50ea98cba940027a9",
+      "status": "violation",
+      "baseline": true,
+      "timestamp": "2026-09-08T22:17:11.444070+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\c046472a3f9e4e43908e82b26601cdb1.json"
+    },
+    {
+      "id": "17d6edf7143643e2bd7f6841d3b9ff35",
+      "run_id": "ec165b4a-ab5f-4ec1-b8f7-1412e593e1ba",
+      "revision": 1,
+      "contract_digest": "02edcae68eefaae5e90bbeefebbc3e2c39d26aa3f8ece067b47945afa4afed7e",
+      "artifact_fingerprint": "d375ae375887b864857788bf21a1d43de2be0d4f46389fa50ea98cba940027a9",
+      "status": "violation",
+      "baseline": false,
+      "timestamp": "2026-09-08T22:17:37.326318+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\17d6edf7143643e2bd7f6841d3b9ff35.json"
+    },
+    {
+      "id": "52784ede2f6042f2b54274d80a028299",
+      "run_id": "ec165b4a-ab5f-4ec1-b8f7-1412e593e1ba",
+      "revision": 1,
+      "contract_digest": "02edcae68eefaae5e90bbeefebbc3e2c39d26aa3f8ece067b47945afa4afed7e",
+      "artifact_fingerprint": "f9586f289229f0b0a70ed58e6a7e54bd9d9a36a304cf3ad418c45d7659b8d45a",
+      "status": "ok",
+      "baseline": false,
+      "timestamp": "2026-09-08T22:18:40.542714+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\52784ede2f6042f2b54274d80a028299.json"
+    }
+  ],
+  "failures": {
+    "acceptance": {
+      "fingerprints": [],
+      "count": 0
+    }
+  },
+  "needs_diagnosis": false,
+  "baseline_recorded": true
+}

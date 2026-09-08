@@ -1,0 +1,12 @@
+{
+  "kind": "core-inspection-microbenchmark",
+  "platform": "Windows-11-10.0.22631-SP0",
+  "python": "3.12.11",
+  "files": 10000,
+  "runs": 10,
+  "milliseconds": [6854.4, 6688.21, 6740.71, 6419.0, 6552.61, 6495.98, 6480.21, 6501.46, 6960.49, 6841.13],
+  "first_ms": 6854.4,
+  "median_ms": 6620.41,
+  "p95_ms": 6960.49,
+  "limits": "One machine; excludes native hook startup and model execution. First run is not an OS cold-cache guarantee."
+}

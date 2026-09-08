@@ -1,0 +1,5 @@
+# Evidence and its verifiers retain byte-for-byte SHA-256 identity across OSes.
+# https://git-scm.com/docs/gitattributes (text and whitespace attributes)
+/evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/scripts/native_smoke.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/scripts/native_compact.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

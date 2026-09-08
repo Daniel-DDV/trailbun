@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "kind": "controlled-core-workflow-study",
+  "native_hooks_installed": false,
+  "host": "codex",
+  "requested_model": "gpt-6-astra",
+  "task": "resume",
+  "condition": "trailbun",
+  "repeat": 2,
+  "started_at": "2026-09-08T21:29:15.769437+00:00",
+  "phases": [
+    {
+      "argv": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-C",
+        "<WORKTREE>",
+        "-"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 18.391,
+      "telemetry": {
+        "reported_models": [],
+        "usage": [
+          {
+            "input_tokens": 74143,
+            "cached_input_tokens": 54016,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 336,
+            "reasoning_output_tokens": 15
+          }
+        ],
+        "reported_cost_usd": [],
+        "commands": [],
+        "invalid_json_lines": 0
+      },
+      "production_edits_before_handoff": []
+    },
+    {
+      "argv": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--json",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-C",
+        "<WORKTREE>",
+        "-"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 11.906,
+      "telemetry": {
+        "reported_models": [],
+        "usage": [
+          {
+            "input_tokens": 42233,
+            "cached_input_tokens": 32640,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 193,
+            "reasoning_output_tokens": 27
+          }
+        ],
+        "reported_cost_usd": [],
+        "commands": [],
+        "invalid_json_lines": 0
+      }
+    }
+  ],
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.11",
+    "os": "Windows-11-10.0.22631-SP0"
+  },
+  "host_version": "codex-cli 0.153.4",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.EXE",
+    "<HOME>\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--json",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-C",
+    "<WORKTREE>",
+    "-"
+  ],
+  "score": {
+    "acceptance_passed": false,
+    "acceptance": {
+      "exit_code": 1,
+      "output": "Traceback (most recent call last):\n  File \"<string>\", line 3, in <module>\nAssertionError\n"
+    },
+    "protected_files_unchanged": true,
+    "changed_paths": [],
+    "out_of_scope_paths": [],
+    "task_success": false,
+    "inspection_phase_preserved_production": true
+  },
+  "model_wall_seconds": 30.297,
+  "workflow_observed": {
+    "error": "No active Trailbun task in this worktree; run trailbun start"
+  }
+}

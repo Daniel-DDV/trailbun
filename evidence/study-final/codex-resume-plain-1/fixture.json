@@ -1,0 +1,14 @@
+{
+  "task": "resume",
+  "condition": "plain",
+  "baseline": "3642429c901c360d702d81ffcd28f76831f6730d",
+  "fixture_owner_access": "creator-only inherited Modify on Windows; no-op on POSIX",
+  "fixture_sha256": "3378bcbafb09283b393392f4ecd5daf14630c3857455994bbe5949e3010b8987",
+  "initial_files": {
+    "app/__init__.py": "",
+    "app/greeting.py": "def greeting(name):\n    return f\"Hello, {name}!\"\n",
+    ".gitignore": "__pycache__/\n*.pyc\n",
+    "acceptance.py": "from app.greeting import greeting\nfor value in (None, \"\", \"   \"):\n    assert greeting(value) == \"Welcome, traveler.\"\nassert greeting(\" Ada \") == \"Welcome, Ada.\"\nassert greeting(\"Léa\") == \"Welcome, Léa.\"\nprint(\"acceptance: passed\")\n"
+  },
+  "seeded_attempts": []
+}

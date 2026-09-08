@@ -1,0 +1,18 @@
+{
+  ".gitignore": {
+    "retained": true,
+    "text": "__pycache__/\n*.pyc\n"
+  },
+  "acceptance.py": {
+    "retained": true,
+    "text": "from app.greeting import greeting\nfor value in (None, \"\", \"   \"):\n    assert greeting(value) == \"Welcome, traveler.\"\nassert greeting(\" Ada \") == \"Welcome, Ada.\"\nassert greeting(\"Léa\") == \"Welcome, Léa.\"\nprint(\"acceptance: passed\")\n"
+  },
+  "app/__init__.py": {
+    "retained": true,
+    "text": ""
+  },
+  "app/greeting.py": {
+    "retained": true,
+    "text": "def greeting(name):\n    name = name.strip() if name is not None else \"\"\n    return f\"Welcome, {name or 'traveler'}.\"\n"
+  }
+}

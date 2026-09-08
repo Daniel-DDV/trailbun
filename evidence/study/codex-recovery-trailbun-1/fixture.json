@@ -1,0 +1,116 @@
+{
+  "task": "recovery",
+  "condition": "trailbun",
+  "baseline": "675e5075cd0838e3caa6daf4f1c6df4bab8b369d",
+  "fixture_sha256": "3355f872411d8af714a0771e86941632e3a5304e299d0c40e2d8db73c824b716",
+  "initial_files": {
+    "app/__init__.py": "",
+    "app/money.py": "def money_total(values):\n    return 0.0\n",
+    ".gitignore": "__pycache__/\n*.pyc\n",
+    "acceptance.py": "from decimal import Decimal\nfrom app.money import money_total\nassert money_total([\"1.005\"]) == Decimal(\"1.01\"), \"round half up, not binary/bankers rounding\"\nassert money_total([\"0.1\", \"0.2\"]) == Decimal(\"0.30\")\nassert money_total([]) == Decimal(\"0.00\")\nassert isinstance(money_total([\"1\"]), Decimal)\nprint(\"acceptance: passed\")\n"
+  },
+  "seeded_attempts": [
+    {
+      "kind": "harness-seeded-correction",
+      "attempt": 1,
+      "source": "def money_total(values):\n    return round(sum(float(v) for v in values), 1)\n",
+      "exit_code": 1,
+      "output": "Traceback (most recent call last):\n  File \"<string>\", line 3, in <module>\nAssertionError: round half up, not binary/bankers rounding\n",
+      "trailbun_receipt": {
+        "schema_version": 1,
+        "id": "484666bc8d9040fab2ac009c1ed71b5c",
+        "run_id": "57b56aec-be6b-4118-9b6e-4fa31cb7de17",
+        "revision": 1,
+        "contract_digest": "24b65ecbb99785ec33a7cd14156d7c7ef27568e8d26b7534df9cebeed3b1585f",
+        "artifact_fingerprint": "f3fed53f11de9f0e7e4fec4397608861378a15b84df4fe767693e665d0594da5",
+        "artifact_before": {
+          "head": "675e5075cd0838e3caa6daf4f1c6df4bab8b369d",
+          "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+          "fingerprint": "f3fed53f11de9f0e7e4fec4397608861378a15b84df4fe767693e665d0594da5"
+        },
+        "artifact_after": {
+          "head": "675e5075cd0838e3caa6daf4f1c6df4bab8b369d",
+          "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+          "fingerprint": "f3fed53f11de9f0e7e4fec4397608861378a15b84df4fe767693e665d0594da5"
+        },
+        "file_count": 4,
+        "status": "violation",
+        "checks": [
+          {
+            "id": "acceptance",
+            "argv": [
+              "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
+              "-B",
+              "acceptance.py"
+            ],
+            "exit_code": 1,
+            "status": "violation",
+            "output": "Traceback (most recent call last):\r\n  File \"<WORKTREE>\\acceptance.py\", line 3, in <module>\r\n    assert money_total([\"1.005\"]) == Decimal(\"1.01\"), \"round half up, not binary/bankers rounding\"\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError: round half up, not binary/bankers rounding\r\n",
+            "output_truncated": false,
+            "duration_seconds": 0.031
+          }
+        ],
+        "baseline": false,
+        "timestamp": "2026-09-08T21:28:26.007230+00:00",
+        "environment": {
+          "trailbun": "0.2.0",
+          "python": "3.12.11",
+          "platform": "Windows-11-10.0.22631-SP0"
+        },
+        "needs_diagnosis": false,
+        "receipt_path": "<WORKTREE>\\.git\\trailbun\\receipts\\484666bc8d9040fab2ac009c1ed71b5c.json"
+      }
+    },
+    {
+      "kind": "harness-seeded-correction",
+      "attempt": 2,
+      "source": "def money_total(values):\n    return round(sum(float(v) for v in values), 2)\n",
+      "exit_code": 1,
+      "output": "Traceback (most recent call last):\n  File \"<string>\", line 3, in <module>\nAssertionError: round half up, not binary/bankers rounding\n",
+      "trailbun_receipt": {
+        "schema_version": 1,
+        "id": "6fd4d58a338c450a92ca16c8ce2499eb",
+        "run_id": "57b56aec-be6b-4118-9b6e-4fa31cb7de17",
+        "revision": 1,
+        "contract_digest": "24b65ecbb99785ec33a7cd14156d7c7ef27568e8d26b7534df9cebeed3b1585f",
+        "artifact_fingerprint": "b263a1d407c0e39664c2261e60578de16a8723b600c2a78f86e943aa84028771",
+        "artifact_before": {
+          "head": "675e5075cd0838e3caa6daf4f1c6df4bab8b369d",
+          "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+          "fingerprint": "b263a1d407c0e39664c2261e60578de16a8723b600c2a78f86e943aa84028771"
+        },
+        "artifact_after": {
+          "head": "675e5075cd0838e3caa6daf4f1c6df4bab8b369d",
+          "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+          "fingerprint": "b263a1d407c0e39664c2261e60578de16a8723b600c2a78f86e943aa84028771"
+        },
+        "file_count": 4,
+        "status": "violation",
+        "checks": [
+          {
+            "id": "acceptance",
+            "argv": [
+              "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
+              "-B",
+              "acceptance.py"
+            ],
+            "exit_code": 1,
+            "status": "violation",
+            "output": "Traceback (most recent call last):\r\n  File \"<WORKTREE>\\acceptance.py\", line 3, in <module>\r\n    assert money_total([\"1.005\"]) == Decimal(\"1.01\"), \"round half up, not binary/bankers rounding\"\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError: round half up, not binary/bankers rounding\r\n",
+            "output_truncated": false,
+            "duration_seconds": 0.031
+          }
+        ],
+        "baseline": false,
+        "timestamp": "2026-09-08T21:28:26.897849+00:00",
+        "environment": {
+          "trailbun": "0.2.0",
+          "python": "3.12.11",
+          "platform": "Windows-11-10.0.22631-SP0"
+        },
+        "needs_diagnosis": true,
+        "receipt_path": "<WORKTREE>\\.git\\trailbun\\receipts\\6fd4d58a338c450a92ca16c8ce2499eb.json"
+      }
+    }
+  ]
+}

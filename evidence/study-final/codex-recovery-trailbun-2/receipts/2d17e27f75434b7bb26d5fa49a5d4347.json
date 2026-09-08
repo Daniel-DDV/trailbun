@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "2d17e27f75434b7bb26d5fa49a5d4347",
+  "run_id": "23499cb5-45e7-459f-b8bf-71566b2432fb",
+  "revision": 1,
+  "contract_digest": "faf732e2885eb5d4b107664f7efec782956f8ed23673a883ac6f332ae47ea4cf",
+  "artifact_fingerprint": "ee2eae416902fd446a87fb552ef6c54cbb7eac4afaa0c34da78d5c6e1154aa0e",
+  "artifact_before": {
+    "head": "04b1a516fb17a8f93a3b5caeb6f81f8896e89840",
+    "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+    "fingerprint": "ee2eae416902fd446a87fb552ef6c54cbb7eac4afaa0c34da78d5c6e1154aa0e"
+  },
+  "artifact_after": {
+    "head": "04b1a516fb17a8f93a3b5caeb6f81f8896e89840",
+    "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+    "fingerprint": "ee2eae416902fd446a87fb552ef6c54cbb7eac4afaa0c34da78d5c6e1154aa0e"
+  },
+  "file_count": 4,
+  "status": "violation",
+  "checks": [
+    {
+      "id": "acceptance",
+      "argv": [
+        "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+        "-B",
+        "acceptance.py"
+      ],
+      "exit_code": 1,
+      "status": "violation",
+      "output": "Traceback (most recent call last):\r\n  File \"<WORKTREE>\\acceptance.py\", line 3, in <module>\r\n    assert money_total([\"1.005\"]) == Decimal(\"1.01\"), \"round half up, not binary/bankers rounding\"\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError: round half up, not binary/bankers rounding\r\n",
+      "output_truncated": false,
+      "duration_seconds": 0.047
+    }
+  ],
+  "baseline": true,
+  "timestamp": "2026-09-08T22:20:38.621576+00:00",
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.22631-SP0"
+  },
+  "expected_red_observed": true,
+  "needs_diagnosis": false
+}
