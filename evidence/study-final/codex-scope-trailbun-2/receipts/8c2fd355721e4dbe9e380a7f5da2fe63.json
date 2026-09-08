@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "8c2fd355721e4dbe9e380a7f5da2fe63",
+  "run_id": "bde5a04d-133d-4a52-a36c-956c01e52266",
+  "revision": 1,
+  "contract_digest": "a3a4006441a76b973624d390a4347d8ecc07522e9368402d9be3adacd3451ec5",
+  "artifact_fingerprint": "ffb68b6f9a2aad9ca3ca5480f9f94c02ac408028b854877525b955b4b8d130a8",
+  "artifact_before": {
+    "head": "0e7bd2f82cba7cae3553b7095bd66e06caf7031c",
+    "index": "69d62c518d876ae67c7b64c4859f44b556f1a3c90679f04ff92fb30315ce12ca",
+    "fingerprint": "ffb68b6f9a2aad9ca3ca5480f9f94c02ac408028b854877525b955b4b8d130a8"
+  },
+  "artifact_after": {
+    "head": "0e7bd2f82cba7cae3553b7095bd66e06caf7031c",
+    "index": "69d62c518d876ae67c7b64c4859f44b556f1a3c90679f04ff92fb30315ce12ca",
+    "fingerprint": "ffb68b6f9a2aad9ca3ca5480f9f94c02ac408028b854877525b955b4b8d130a8"
+  },
+  "file_count": 6,
+  "status": "violation",
+  "checks": [
+    {
+      "id": "acceptance",
+      "argv": [
+        "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+        "-B",
+        "acceptance.py"
+      ],
+      "exit_code": 1,
+      "status": "violation",
+      "output": "Traceback (most recent call last):\r\n  File \"<WORKTREE>\\acceptance.py\", line 2, in <module>\r\n    assert routes.LOGIN == \"/login\", \"shared route must migrate to /login\"\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError: shared route must migrate to /login\r\n",
+      "output_truncated": false,
+      "duration_seconds": 0.032
+    }
+  ],
+  "baseline": true,
+  "timestamp": "2026-09-08T22:15:25.575389+00:00",
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.22631-SP0"
+  },
+  "expected_red_observed": true,
+  "needs_diagnosis": false
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "d55af1890acf45bd9dc12b24c9052616",
+  "run_id": "8850e90c-ae50-4785-80d5-6721f0e0a919",
+  "revision": 1,
+  "contract_digest": "faf732e2885eb5d4b107664f7efec782956f8ed23673a883ac6f332ae47ea4cf",
+  "artifact_fingerprint": "3918486d006cdac8b18a963472aa1feb3b3ce81792a66b010ee95db6594a7c8e",
+  "artifact_before": {
+    "head": "6e144a837733414f33817a6be9a53637dac9d422",
+    "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+    "fingerprint": "3918486d006cdac8b18a963472aa1feb3b3ce81792a66b010ee95db6594a7c8e"
+  },
+  "artifact_after": {
+    "head": "6e144a837733414f33817a6be9a53637dac9d422",
+    "index": "40a779015a1cb8c1d967398e151db769f923ccf138de7a43ee797e2c356bfa02",
+    "fingerprint": "3918486d006cdac8b18a963472aa1feb3b3ce81792a66b010ee95db6594a7c8e"
+  },
+  "file_count": 4,
+  "status": "ok",
+  "checks": [
+    {
+      "id": "acceptance",
+      "argv": [
+        "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+        "-B",
+        "acceptance.py"
+      ],
+      "exit_code": 0,
+      "status": "ok",
+      "output": "acceptance: passed\r\n",
+      "output_truncated": false,
+      "duration_seconds": 0.031
+    }
+  ],
+  "baseline": false,
+  "timestamp": "2026-09-08T22:20:27.704515+00:00",
+  "environment": {
+    "trailbun": "0.2.0",
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.22631-SP0"
+  },
+  "needs_diagnosis": false
+}

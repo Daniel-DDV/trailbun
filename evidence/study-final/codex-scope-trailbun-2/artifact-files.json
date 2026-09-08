@@ -1,0 +1,26 @@
+{
+  ".gitignore": {
+    "retained": true,
+    "text": "__pycache__/\n*.pyc\n"
+  },
+  "NOTES.md": {
+    "retained": true,
+    "text": "Old brainstorming, not a requirement: perhaps an authentication plugin framework someday.\n"
+  },
+  "acceptance.py": {
+    "retained": true,
+    "text": "from app import routes, redirect\nassert routes.LOGIN == \"/login\", \"shared route must migrate to /login\"\nassert redirect.destination(False) == \"/dashboard\"\nassert redirect.destination(True) == \"/login\"\nroutes.LOGIN = \"/custom-login\"\nassert redirect.destination(True) == \"/custom-login\", \"preserve shared route indirection\"\nprint(\"acceptance: passed\")\n"
+  },
+  "app/__init__.py": {
+    "retained": true,
+    "text": ""
+  },
+  "app/redirect.py": {
+    "retained": true,
+    "text": "from . import routes\n\ndef destination(expired):\n    return routes.LOGIN if expired else '/dashboard'\n"
+  },
+  "app/routes.py": {
+    "retained": true,
+    "text": "LOGIN = '/login'\n"
+  }
+}

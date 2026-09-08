@@ -1,0 +1,554 @@
+{
+  "kind": "controlled-core-workflow-study-summary",
+  "planned_runs": 24,
+  "native_hooks_installed": false,
+  "recorded_runs": 12,
+  "missing_runs": 12,
+  "recorded_phases": 16,
+  "task_successes": 9,
+  "policy_blocked_runs": 0,
+  "timeouts": 0,
+  "runs_with_runner_or_export_errors": 0,
+  "model_wall_seconds_sum": 1125.159,
+  "requested_models": [
+    "gpt-6-astra"
+  ],
+  "reported_models": [],
+  "reported_usage_totals": {
+    "input_tokens": 2689374,
+    "cached_input_tokens": 2353152,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 20903,
+    "reasoning_output_tokens": 647
+  },
+  "reported_cost_usd": null,
+  "interpretation": "Diagnostic outcomes only; no efficacy estimate. Missing model/cost is unknown. Process completion is separate from acceptance. Summed session times are not elapsed experiment time when tasks run concurrently.",
+  "rows": [
+    {
+      "cell": "claude-scope-plain-1",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-trailbun-1",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-plain-2",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-scope-trailbun-2",
+      "host": "claude",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-plain-1",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-trailbun-1",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-plain-2",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-resume-trailbun-2",
+      "host": "claude",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-plain-1",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-trailbun-1",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-plain-2",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "claude-recovery-trailbun-2",
+      "host": "claude",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": false,
+      "host_process_status": "not-run"
+    },
+    {
+      "cell": "codex-scope-plain-1",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [
+        "DIAGNOSIS.md"
+      ],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 75.735,
+      "reported_usage": [
+        {
+          "input_tokens": 180789,
+          "cached_input_tokens": 167680,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1279,
+          "reasoning_output_tokens": 90
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-plain-1/run.json"
+    },
+    {
+      "cell": "codex-scope-trailbun-1",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 82.093,
+      "reported_usage": [
+        {
+          "input_tokens": 223386,
+          "cached_input_tokens": 205440,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1339,
+          "reasoning_output_tokens": 38
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": true,
+        "amendments": 1,
+        "diagnoses": 1,
+        "checkpoint_recorded": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-trailbun-1/run.json"
+    },
+    {
+      "cell": "codex-scope-plain-2",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 65.391,
+      "reported_usage": [
+        {
+          "input_tokens": 158606,
+          "cached_input_tokens": 134016,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1215,
+          "reasoning_output_tokens": 86
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": false
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-plain-2/run.json"
+    },
+    {
+      "cell": "codex-scope-trailbun-2",
+      "host": "codex",
+      "task": "scope",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 84.688,
+      "reported_usage": [
+        {
+          "input_tokens": 200822,
+          "cached_input_tokens": 182528,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1459,
+          "reasoning_output_tokens": 22
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": true,
+        "amendments": 1,
+        "diagnoses": 1,
+        "checkpoint_recorded": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-scope-trailbun-2/run.json"
+    },
+    {
+      "cell": "codex-resume-plain-1",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [
+        "DIAGNOSIS.md"
+      ],
+      "policy_block_messages": 0,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 112.954,
+      "reported_usage": [
+        {
+          "input_tokens": 111480,
+          "cached_input_tokens": 98432,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1104,
+          "reasoning_output_tokens": 44
+        },
+        {
+          "input_tokens": 157841,
+          "cached_input_tokens": 144768,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1025,
+          "reasoning_output_tokens": 22
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": true,
+        "diagnosis_file_present": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-plain-1/run.json"
+    },
+    {
+      "cell": "codex-resume-trailbun-1",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 113.046,
+      "reported_usage": [
+        {
+          "input_tokens": 94896,
+          "cached_input_tokens": 78848,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 962,
+          "reasoning_output_tokens": 15
+        },
+        {
+          "input_tokens": 139087,
+          "cached_input_tokens": 112512,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 971,
+          "reasoning_output_tokens": 20
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": true,
+        "amendments": 0,
+        "diagnoses": 0,
+        "checkpoint_recorded": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-trailbun-1/run.json"
+    },
+    {
+      "cell": "codex-resume-plain-2",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": false,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [
+        "DIAGNOSIS.md"
+      ],
+      "policy_block_messages": 0,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 126.767,
+      "reported_usage": [
+        {
+          "input_tokens": 134774,
+          "cached_input_tokens": 110848,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1270,
+          "reasoning_output_tokens": 66
+        },
+        {
+          "input_tokens": 159165,
+          "cached_input_tokens": 146048,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1259,
+          "reasoning_output_tokens": 44
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": true,
+        "diagnosis_file_present": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-plain-2/run.json"
+    },
+    {
+      "cell": "codex-resume-trailbun-2",
+      "host": "codex",
+      "task": "resume",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 2,
+      "timeout_count": 0,
+      "model_wall_seconds": 103.766,
+      "reported_usage": [
+        {
+          "input_tokens": 95769,
+          "cached_input_tokens": 79488,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1004,
+          "reasoning_output_tokens": 35
+        },
+        {
+          "input_tokens": 138799,
+          "cached_input_tokens": 112384,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 905,
+          "reasoning_output_tokens": 21
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": true,
+        "amendments": 0,
+        "diagnoses": 0,
+        "checkpoint_recorded": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-resume-trailbun-2/run.json"
+    },
+    {
+      "cell": "codex-recovery-plain-1",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 89.078,
+      "reported_usage": [
+        {
+          "input_tokens": 209722,
+          "cached_input_tokens": 195072,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1884,
+          "reasoning_output_tokens": 50
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-plain-1/run.json"
+    },
+    {
+      "cell": "codex-recovery-trailbun-1",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 1,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 89.188,
+      "reported_usage": [
+        {
+          "input_tokens": 208606,
+          "cached_input_tokens": 172800,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1719,
+          "reasoning_output_tokens": 27
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": true,
+        "amendments": 0,
+        "diagnoses": 1,
+        "checkpoint_recorded": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-trailbun-1/run.json"
+    },
+    {
+      "cell": "codex-recovery-plain-2",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "plain",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 86.344,
+      "reported_usage": [
+        {
+          "input_tokens": 207041,
+          "cached_input_tokens": 180864,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1695,
+          "reasoning_output_tokens": 38
+        }
+      ],
+      "workflow_observed": {
+        "handoff_file_present": false,
+        "diagnosis_file_present": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-plain-2/run.json"
+    },
+    {
+      "cell": "codex-recovery-trailbun-2",
+      "host": "codex",
+      "task": "recovery",
+      "repeat": 2,
+      "condition": "trailbun",
+      "recorded": true,
+      "host_process_status": "completed",
+      "task_success": true,
+      "acceptance_passed": true,
+      "out_of_scope_paths": [],
+      "policy_block_messages": 0,
+      "phase_count": 1,
+      "timeout_count": 0,
+      "model_wall_seconds": 96.109,
+      "reported_usage": [
+        {
+          "input_tokens": 268591,
+          "cached_input_tokens": 231424,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1813,
+          "reasoning_output_tokens": 29
+        }
+      ],
+      "workflow_observed": {
+        "verification_current": true,
+        "amendments": 0,
+        "diagnoses": 1,
+        "checkpoint_recorded": true
+      },
+      "runner_or_export_errors": {},
+      "evidence": "codex-recovery-trailbun-2/run.json"
+    }
+  ]
+}

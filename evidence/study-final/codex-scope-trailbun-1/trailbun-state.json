@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "run_id": "b9b032cd-e5d0-4b8f-8e0f-daf898240e65",
+  "contract": {
+    "goal": "Fix the expired-session redirect using the shared login route.",
+    "exclusions": [
+      "No unrelated architecture or dependencies; preserve acceptance.py"
+    ],
+    "allowed_paths": [
+      "app/redirect.py",
+      "app/routes.py"
+    ],
+    "watch_ignored": [],
+    "checks": [
+      {
+        "id": "acceptance",
+        "argv": [
+          "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+          "-B",
+          "acceptance.py"
+        ],
+        "timeout_seconds": 15
+      }
+    ],
+    "expected_red": [
+      "acceptance"
+    ]
+  },
+  "revision": 2,
+  "baseline": "6218e70d7ff5de97b9726854ac57d1db02335434",
+  "initial_fingerprint": "fe0a1daf2a7e46a6d3442e2c14a18596b5372db25117d8b6f8e1de8999d402bc",
+  "baseline_watched": {},
+  "created_at": "2026-09-08T22:11:30.541569+00:00",
+  "contract_history": [
+    {
+      "revision": 1,
+      "contract": {
+        "goal": "Fix the expired-session redirect using the shared login route.",
+        "exclusions": [
+          "No unrelated architecture or dependencies; preserve acceptance.py"
+        ],
+        "allowed_paths": [
+          "app/redirect.py"
+        ],
+        "watch_ignored": [],
+        "checks": [
+          {
+            "id": "acceptance",
+            "argv": [
+              "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe",
+              "-B",
+              "acceptance.py"
+            ],
+            "timeout_seconds": 15
+          }
+        ],
+        "expected_red": [
+          "acceptance"
+        ]
+      },
+      "reason": "User explicitly authorized extending initial app/redirect.py scope to app/routes.py because the shared LOGIN constant must migrate from /signin to /login. Preserve the original task baseline and existing acceptance check.",
+      "timestamp": "2026-09-08T22:12:04.038101+00:00"
+    }
+  ],
+  "progress": {
+    "summary": "Updated shared LOGIN to /login and expired-session redirect to dynamically read routes.LOGIN; active sessions retain /dashboard. Authorized scope extension recorded with original baseline retained.",
+    "next_action": "Run check and verify against unchanged acceptance.py",
+    "failed_hypotheses": [],
+    "updated_at": "2026-09-08T22:12:29.060399+00:00"
+  },
+  "receipts": [
+    {
+      "id": "989c46e557d8405cb275b98a47e379d0",
+      "run_id": "b9b032cd-e5d0-4b8f-8e0f-daf898240e65",
+      "revision": 1,
+      "contract_digest": "a3a4006441a76b973624d390a4347d8ecc07522e9368402d9be3adacd3451ec5",
+      "artifact_fingerprint": "fe0a1daf2a7e46a6d3442e2c14a18596b5372db25117d8b6f8e1de8999d402bc",
+      "status": "violation",
+      "baseline": true,
+      "timestamp": "2026-09-08T22:11:32.509033+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\989c46e557d8405cb275b98a47e379d0.json"
+    },
+    {
+      "id": "08affaaacd374e8fb26b6c163fd6c13a",
+      "run_id": "b9b032cd-e5d0-4b8f-8e0f-daf898240e65",
+      "revision": 2,
+      "contract_digest": "4a43373c40999c4cabfb8d0d9467a90452cae2fd047da1ead04c3a7346d9ef69",
+      "artifact_fingerprint": "5eda3981646093f9073c94a47082b3433120514ce4c601e206dfe91626203f10",
+      "status": "ok",
+      "baseline": false,
+      "timestamp": "2026-09-08T22:12:31.695002+00:00",
+      "path": "<WORKTREE>\\.trailbun\\receipts\\08affaaacd374e8fb26b6c163fd6c13a.json"
+    }
+  ],
+  "failures": {
+    "acceptance": {
+      "fingerprints": [],
+      "count": 0
+    }
+  },
+  "needs_diagnosis": false,
+  "baseline_recorded": true,
+  "diagnoses": [
+    {
+      "reproduction": "verify --baseline fails acceptance at the shared LOGIN assertion",
+      "cause": "app/routes.py defines LOGIN as /signin and app/redirect.py always returns /dashboard",
+      "evidence": "receipt:989c46e557d8405cb275b98a47e379d0",
+      "next_action": "Amend scope to include app/routes.py, migrate LOGIN to /login, and read routes.LOGIN for expired sessions",
+      "evidence_record": {
+        "path": "<WORKTREE>\\.trailbun\\receipts\\989c46e557d8405cb275b98a47e379d0.json",
+        "sha256": "9a23c481c88475acd70c6359b163259cf82546e29e6906098f807f0ddffd652c",
+        "receipt_id": "989c46e557d8405cb275b98a47e379d0"
+      },
+      "timestamp": "2026-09-08T22:11:52.285061+00:00",
+      "previous_failures": {}
+    }
+  ],
+  "failure_history": [
+    {}
+  ]
+}

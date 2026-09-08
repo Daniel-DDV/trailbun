@@ -1,0 +1,12 @@
+diff --git a/app/money.py b/app/money.py
+index a60024e..d709948 100644
+--- a/app/money.py
++++ b/app/money.py
+@@ -1,2 +1,6 @@
++from decimal import Decimal, ROUND_HALF_UP
++
++
+ def money_total(values):
+-    return 0.0
++    total = sum((Decimal(value) for value in values), Decimal("0.00"))
++    return total.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)

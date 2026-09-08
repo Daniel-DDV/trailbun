@@ -1,0 +1,14 @@
+{
+  "task": "resume",
+  "condition": "trailbun",
+  "baseline": "8672de871a6c8d4d350d7fe40a8a8595a0ec9f18",
+  "fixture_owner_access": "creator-only inherited Modify on Windows; no-op on POSIX",
+  "fixture_sha256": "3378bcbafb09283b393392f4ecd5daf14630c3857455994bbe5949e3010b8987",
+  "initial_files": {
+    "app/__init__.py": "",
+    "app/greeting.py": "def greeting(name):\n    return f\"Hello, {name}!\"\n",
+    ".gitignore": "__pycache__/\n*.pyc\n",
+    "acceptance.py": "from app.greeting import greeting\nfor value in (None, \"\", \"   \"):\n    assert greeting(value) == \"Welcome, traveler.\"\nassert greeting(\" Ada \") == \"Welcome, Ada.\"\nassert greeting(\"Léa\") == \"Welcome, Léa.\"\nprint(\"acceptance: passed\")\n"
+  },
+  "seeded_attempts": []
+}

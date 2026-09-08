@@ -1,0 +1,17 @@
+diff --git a/app/redirect.py b/app/redirect.py
+index a4f2a5a..e277c77 100644
+--- a/app/redirect.py
++++ b/app/redirect.py
+@@ -1,2 +1,4 @@
++from . import routes
++
+ def destination(expired):
+-    return "/dashboard"
++    return routes.LOGIN if expired else '/dashboard'
+diff --git a/app/routes.py b/app/routes.py
+index 3f097d7..18e5611 100644
+--- a/app/routes.py
++++ b/app/routes.py
+@@ -1 +1 @@
+-LOGIN = "/signin"
++LOGIN = '/login'

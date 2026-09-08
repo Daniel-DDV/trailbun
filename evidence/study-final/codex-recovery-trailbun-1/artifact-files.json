@@ -1,0 +1,18 @@
+{
+  ".gitignore": {
+    "retained": true,
+    "text": "__pycache__/\n*.pyc\n"
+  },
+  "acceptance.py": {
+    "retained": true,
+    "text": "from decimal import Decimal\nfrom app.money import money_total\nassert money_total([\"1.005\"]) == Decimal(\"1.01\"), \"round half up, not binary/bankers rounding\"\nassert money_total([\"0.1\", \"0.2\"]) == Decimal(\"0.30\")\nassert money_total([]) == Decimal(\"0.00\")\nassert isinstance(money_total([\"1\"]), Decimal)\nprint(\"acceptance: passed\")\n"
+  },
+  "app/__init__.py": {
+    "retained": true,
+    "text": ""
+  },
+  "app/money.py": {
+    "retained": true,
+    "text": "from decimal import Decimal, ROUND_HALF_UP\n\n\ndef money_total(values):\n    total = sum((Decimal(value) for value in values), Decimal(\"0\"))\n    return total.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n"
+  }
+}

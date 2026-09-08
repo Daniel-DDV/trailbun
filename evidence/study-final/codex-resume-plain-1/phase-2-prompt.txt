@@ -1,0 +1,2 @@
+This is a fresh session. The prior session inspected the fixture and left durable task state. Continue from that handoff, implement the exact recorded requirement, and verify it. Do not invent missing requirements or read outside this fixture. Keep acceptance.py unchanged. No prior transcript is included.
+Read HANDOFF.md. Run "<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe" -B acceptance.py after implementing the task.

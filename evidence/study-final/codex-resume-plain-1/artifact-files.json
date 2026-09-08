@@ -1,0 +1,26 @@
+{
+  ".gitignore": {
+    "retained": true,
+    "text": "__pycache__/\n*.pyc\n"
+  },
+  "DIAGNOSIS.md": {
+    "retained": true,
+    "text": "# Recovery diagnosis\n\nReproduction: the specified Python acceptance command exits with code 1 at\nacceptance.py:3 for the first input, None.\n\nCause and evidence: app/greeting.py returns `Hello, {name}!` without normalizing\nthe name. The handoff and acceptance assertions require `Welcome, NAME.`, with\n`traveler` for None or blank names and surrounding whitespace removed.\n\nNext experiment: update only app/greeting.py to normalize the name and format\nthe required welcome. Run acceptance.py unchanged, then standard-library\nassertions for mixed case, Unicode whitespace, and preserved Unicode characters.\n"
+  },
+  "HANDOFF.md": {
+    "retained": true,
+    "text": "# Inspection handoff\n\n## Exact requirements\n\ngreeting(name) must return \"Welcome, NAME.\". None, empty and whitespace-only names become \"traveler\". Strip surrounding whitespace from nonempty names but preserve their case and Unicode characters. Do not add dependencies or change the public function name.\n\nAcceptance command (PowerShell):\n\n```powershell\n& '<TRAILBUN_SOURCE>\\.git\\native-venv\\Scripts\\python.exe' -B acceptance.py\n```\n\nOnly inspect this generated fixture and use Python standard library. Do not read other repositories, global configuration or credentials. Do not use network tools or Trailbun. Keep acceptance.py and existing unrelated files unchanged.\n\n## Reproduction and evidence\n\n- Read acceptance.py, app/greeting.py and the empty app/__init__.py.\n- Ran the exact acceptance command: exit code 1, AssertionError at acceptance.py:3, on the first input (None).\n- app/greeting.py currently defines greeting(name) as `return f\"Hello, {name}!\"`. For None this produces \"Hello, None!\", whereas acceptance expects \"Welcome, traveler.\".\n- Cause: wrong greeting text and punctuation, with no None handling, whitespace stripping or empty-name fallback.\n- Acceptance also checks empty and whitespace-only input, surrounding whitespace in \" Ada \", and Unicode in \"Léa\". It stops at the first failure, so those later assertions have not run successfully.\n\n## State and next action\n\nInspection phase only: no app files or acceptance.py were modified. Authorized scope extension: create this HANDOFF.md to persist task state; no implementation extension was authorized.\n\nNext action: when implementation is authorized, update only app/greeting.py to handle None, strip surrounding whitespace, select \"traveler\" for an empty result, and return the exact welcome format while preserving case and Unicode. Run the acceptance command and standard-library checks for mixed case and Unicode whitespace; report the results. If proceeding as recovery, first write DIAGNOSIS.md containing reproduction, cause, evidence and the next experiment before modifying production code.\n"
+  },
+  "acceptance.py": {
+    "retained": true,
+    "text": "from app.greeting import greeting\nfor value in (None, \"\", \"   \"):\n    assert greeting(value) == \"Welcome, traveler.\"\nassert greeting(\" Ada \") == \"Welcome, Ada.\"\nassert greeting(\"Léa\") == \"Welcome, Léa.\"\nprint(\"acceptance: passed\")\n"
+  },
+  "app/__init__.py": {
+    "retained": true,
+    "text": ""
+  },
+  "app/greeting.py": {
+    "retained": true,
+    "text": "def greeting(name):\n    name = \"\" if name is None else name.strip()\n    return f\"Welcome, {name or 'traveler'}.\"\n"
+  }
+}
