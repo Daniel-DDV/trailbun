@@ -39,12 +39,6 @@ def context_restored(events, thread, expected):
     return False
 
 
-def public_events(events):
-    methods = {"hook/started", "hook/completed", "item/started", "item/completed",
-               "turn/started", "turn/completed", "thread/tokenUsage/updated", "warning", "error"}
-    return [event for event in events if event.get("method") in methods]
-
-
 def inspect_runtime(root):
     values, errors = {}, []
     operations = {"config": user_config_snapshot, "sources": source_hashes,
@@ -190,7 +184,7 @@ def main():
         "bound_session": bool(state.get("run_id")) and state.get("bindings", {}).get("codex:" + str(session)) == state["run_id"], "no_errors": not errors}
     output.parent.mkdir(parents=True, exist_ok=True)
     with stream_path.open("x", encoding="utf-8") as stream:
-        stream.write(redact("\n".join(json.dumps(event) for event in public_events(events)) + "\n", root))
+        stream.write(redact("\n".join(json.dumps(event) for event in events) + "\n", root))
     with script_path.open("xb") as stream:
         stream.write(script_bytes)
     report = {"schema_version": 1, "status": "ok" if all(checks.values()) else "incomplete", "checks": checks,
@@ -198,7 +192,6 @@ def main():
         "fixture": str(root), "thread_id": thread, "session_id": session, "canonical_context": canonical,
         "user_config_before": config_before, "user_config_after": after, "sources_before": sources_before, "sources_after": sources_after,
         "elapsed_seconds": round(time.monotonic() - started, 3), "errors": errors, "stderr": "".join(stderr),
-        "event_export": "Only hook, item, turn, token-usage and diagnostic notifications; account and installation metadata omitted",
         "events": {"path": stream_path.name, "sha256": sha(stream_path)}, "script": {"path": script_path.name, "sha256": sha(script_path)},
         "limits": ["Manual compaction with a short injected user history only", "Automatic compaction remains unverified", "No model-response quality or subsequent tool behavior claim"],
         "sources": ["https://learn.chatgpt.com/docs/app-server#trigger-thread-compaction", "https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/core/src/hook_runtime.rs#L117"]}

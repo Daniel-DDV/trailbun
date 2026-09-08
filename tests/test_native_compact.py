@@ -25,3 +25,11 @@ def test_post_probe_inspection_errors_are_retained(monkeypatch, tmp_path):
     monkeypatch.setattr(native.store, "load", denied)
     values, errors = native.inspect_runtime(tmp_path)
     assert not any(values.values()) and len(errors) == 4
+
+
+def test_public_events_omit_unrelated_account_and_installation_metadata():
+    spec.loader.exec_module(native)
+    proof = {"method": "hook/completed", "params": {"run": {"entries": []}}}
+    private = [{"method": "account/rateLimits/updated", "params": {"credits": {"balance": "private"}}},
+               {"method": "remoteControl/status/changed", "params": {"installationId": "private"}}]
+    assert native.public_events([*private, proof]) == [proof]
