@@ -36,6 +36,7 @@ These are the intended design colors; generated textures contain nearby shades.
 | [mascot.png](../assets/mascot.png) | 1254 × 1254, RGBA | Transparent character |
 | [social-preview.png](../assets/social-preview.png) | 1774 × 887 | Social card, 2:1 aspect ratio |
 | [social-preview.svg](../assets/social-preview.svg) | 1280 × 640 viewport | Layout wrapper referencing the PNG |
+| [demo.gif](../assets/demo.gif) | 1000 × 520, 25 seconds | Recorded deterministic terminal demo |
 
 PNG sizes were read from the image files. The mascot has an alpha channel and a
 fully transparent top-left pixel. All four generated images were visually
@@ -46,6 +47,10 @@ raster pixels. Keep it beside `social-preview.png` when using that wrapper.
 
 The README uses a responsive `picture` element to select the light or dark hero.
 Keep the tagline as real Markdown text as well, for accessibility and search.
+
+The terminal GIF is rendered from the exported demo JSON with FFmpeg and the
+repository's rendering script. It is separate from the generated illustrations
+and labels itself as a deterministic demonstration with no live model.
 
 ## Generation provenance
 

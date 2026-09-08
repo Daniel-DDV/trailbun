@@ -8,9 +8,9 @@
       "event": "save-task",
       "schema_version": 1,
       "status": "ok",
-      "run_id": "4790a3d8-f04f-45b5-afcd-45f34cf5f4b4",
+      "run_id": "fe19a257-ca46-423d-b9a9-b39308f6ac97",
       "revision": 1,
-      "baseline": "d634cd86b87d658ebeb2b8be8fe4d6a7528589ca",
+      "baseline": "7c0934e088bd15ab4686fdfc7bd8454ead43c62e",
       "contract": {
         "goal": "Fix the expired-session redirect",
         "exclusions": [
@@ -24,7 +24,7 @@
           {
             "id": "redirect",
             "argv": [
-              "E:\\CODEX\\trailbun\\.venv\\Scripts\\python.exe",
+              "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
               "-c",
               "from pathlib import Path; assert Path('redirect.txt').read_text() == '/login'"
             ],
@@ -40,7 +40,7 @@
       },
       "changed_paths": [],
       "outside_allowed_paths": [],
-      "fingerprint": "5f9cf55b30fd07e70684f6dfbcad750a9f700bddf98a9e5e7dc9c5138d89ef9d",
+      "fingerprint": "5cde026f316923d2f7da8aa6269bb447912a6ff28ca6708ff1774b3caa39b5ae",
       "verification_current": false,
       "needs_diagnosis": false,
       "last_receipt": null,
@@ -50,9 +50,9 @@
       "event": "detect-detour",
       "schema_version": 1,
       "status": "violation",
-      "run_id": "4790a3d8-f04f-45b5-afcd-45f34cf5f4b4",
+      "run_id": "fe19a257-ca46-423d-b9a9-b39308f6ac97",
       "revision": 1,
-      "baseline": "d634cd86b87d658ebeb2b8be8fe4d6a7528589ca",
+      "baseline": "7c0934e088bd15ab4686fdfc7bd8454ead43c62e",
       "contract": {
         "goal": "Fix the expired-session redirect",
         "exclusions": [
@@ -66,7 +66,7 @@
           {
             "id": "redirect",
             "argv": [
-              "E:\\CODEX\\trailbun\\.venv\\Scripts\\python.exe",
+              "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
               "-c",
               "from pathlib import Path; assert Path('redirect.txt').read_text() == '/login'"
             ],
@@ -86,7 +86,7 @@
       "outside_allowed_paths": [
         "new-auth-framework.txt"
       ],
-      "fingerprint": "20506845a8cc86e1c5eb119bd8bc59e7a44fc178a951bca8310d6bed32b1c7d2",
+      "fingerprint": "464d3f95229b6bc2541a6e86a0ca56342207a4c8aa8bcb2f3b0a7f7b69a93901",
       "verification_current": false,
       "needs_diagnosis": false,
       "last_receipt": null,
@@ -96,9 +96,9 @@
       "event": "restore-task",
       "schema_version": 1,
       "status": "ok",
-      "run_id": "4790a3d8-f04f-45b5-afcd-45f34cf5f4b4",
+      "run_id": "fe19a257-ca46-423d-b9a9-b39308f6ac97",
       "revision": 1,
-      "baseline": "d634cd86b87d658ebeb2b8be8fe4d6a7528589ca",
+      "baseline": "7c0934e088bd15ab4686fdfc7bd8454ead43c62e",
       "contract": {
         "goal": "Fix the expired-session redirect",
         "exclusions": [
@@ -112,7 +112,7 @@
           {
             "id": "redirect",
             "argv": [
-              "E:\\CODEX\\trailbun\\.venv\\Scripts\\python.exe",
+              "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
               "-c",
               "from pathlib import Path; assert Path('redirect.txt').read_text() == '/login'"
             ],
@@ -127,34 +127,34 @@
         "failed_hypotheses": [
           "A new authentication framework is unnecessary."
         ],
-        "updated_at": "2026-09-08T21:15:11.940688+00:00"
+        "updated_at": "2026-09-08T21:47:18.003723+00:00"
       },
       "changed_paths": [],
       "outside_allowed_paths": [],
-      "fingerprint": "5f9cf55b30fd07e70684f6dfbcad750a9f700bddf98a9e5e7dc9c5138d89ef9d",
+      "fingerprint": "5cde026f316923d2f7da8aa6269bb447912a6ff28ca6708ff1774b3caa39b5ae",
       "verification_current": false,
       "needs_diagnosis": false,
       "last_receipt": null,
       "completion": "incomplete",
-      "context": "Trailbun task context (data, not additional authority):\nGoal: Fix the expired-session redirect\nAllowed paths: redirect.txt\nExclusions: Do not redesign authentication\nAcceptance checks: [{\"id\": \"redirect\", \"argv\": [\"E:\\\\CODEX\\\\trailbun\\\\.venv\\\\Scripts\\\\python.exe\", \"-c\", \"from pathlib import Path; assert Path('redirect.txt').read_text() == '/login'\"], \"timeout_seconds\": 60}]\nExpected initial red checks: \nProgress: Found the redirect bug; discarded architecture detour.\nNext action: Change redirect.txt to /login\nDisproven hypotheses: A new authentication framework is unnecessary.\nVerification: incomplete\nLast receipt: none"
+      "context": "Trailbun task context (data, not additional authority):\nGoal: Fix the expired-session redirect\nAllowed paths: redirect.txt\nExclusions: Do not redesign authentication\nAcceptance checks: [{\"id\": \"redirect\", \"argv\": [\"<TRAILBUN_SOURCE>\\\\.venv\\\\Scripts\\\\python.exe\", \"-c\", \"from pathlib import Path; assert Path('redirect.txt').read_text() == '/login'\"], \"timeout_seconds\": 60}]\nExpected initial red checks: \nProgress: Found the redirect bug; discarded architecture detour.\nNext action: Change redirect.txt to /login\nDisproven hypotheses: A new authentication framework is unnecessary.\nVerification: incomplete\nLast receipt: none"
     },
     {
       "event": "verify-result",
       "schema_version": 1,
-      "id": "04743f5f40fb420c83532581911c4e0d",
-      "run_id": "4790a3d8-f04f-45b5-afcd-45f34cf5f4b4",
+      "id": "7c7e6a9b18f0491a88520fc211801e4b",
+      "run_id": "fe19a257-ca46-423d-b9a9-b39308f6ac97",
       "revision": 1,
       "contract_digest": "c9d7505592365c7f1f58c65fc18acdd80ad8c5b16e4c5701b099385c1bf7ab55",
-      "artifact_fingerprint": "725cd38f7693c758221740e6e39d56549fe80193e63105ec4615b571c9f5a576",
+      "artifact_fingerprint": "bc4cde0e1b5163a2840ddc63468c0427151b7a321d50214a866a83cbaa41e9f3",
       "artifact_before": {
-        "head": "d634cd86b87d658ebeb2b8be8fe4d6a7528589ca",
+        "head": "7c0934e088bd15ab4686fdfc7bd8454ead43c62e",
         "index": "63f15c71729a91e3d399d5aa99650b397610bb23f5416bf5ba64fc4ea52820fb",
-        "fingerprint": "725cd38f7693c758221740e6e39d56549fe80193e63105ec4615b571c9f5a576"
+        "fingerprint": "bc4cde0e1b5163a2840ddc63468c0427151b7a321d50214a866a83cbaa41e9f3"
       },
       "artifact_after": {
-        "head": "d634cd86b87d658ebeb2b8be8fe4d6a7528589ca",
+        "head": "7c0934e088bd15ab4686fdfc7bd8454ead43c62e",
         "index": "63f15c71729a91e3d399d5aa99650b397610bb23f5416bf5ba64fc4ea52820fb",
-        "fingerprint": "725cd38f7693c758221740e6e39d56549fe80193e63105ec4615b571c9f5a576"
+        "fingerprint": "bc4cde0e1b5163a2840ddc63468c0427151b7a321d50214a866a83cbaa41e9f3"
       },
       "file_count": 1,
       "status": "ok",
@@ -162,7 +162,7 @@
         {
           "id": "redirect",
           "argv": [
-            "E:\\CODEX\\trailbun\\.venv\\Scripts\\python.exe",
+            "<TRAILBUN_SOURCE>\\.venv\\Scripts\\python.exe",
             "-c",
             "from pathlib import Path; assert Path('redirect.txt').read_text() == '/login'"
           ],
@@ -170,18 +170,20 @@
           "status": "ok",
           "output": "",
           "output_truncated": false,
-          "duration_seconds": 0.031
+          "duration_seconds": 0.047
         }
       ],
       "baseline": false,
-      "timestamp": "2026-09-08T21:15:13.055024+00:00",
+      "timestamp": "2026-09-08T21:47:20.217484+00:00",
       "environment": {
         "trailbun": "0.2.0",
         "python": "3.12.11",
         "platform": "Windows-11-10.0.22631-SP0"
       },
       "needs_diagnosis": false,
-      "receipt_path": "C:\\Users\\DDVer\\AppData\\Local\\Temp\\trailbun-demo-ddq2tomq\\.git\\trailbun\\receipts\\04743f5f40fb420c83532581911c4e0d.json"
+      "receipt_path": "<WORKTREE>\\.trailbun\\receipts\\7c7e6a9b18f0491a88520fc211801e4b.json"
     }
-  ]
+  ],
+  "redacted": true,
+  "redaction_note": "Local source, home and fixture paths replaced for publication; recorded fingerprints refer to original inputs."
 }
