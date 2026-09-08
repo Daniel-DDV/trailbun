@@ -12,6 +12,18 @@ The parent bootstraps the locally ignored `.trailbun` runtime before either host
 condition starts. Mutable contract input lives there, outside protected Git
 metadata; no model needs permission to alter `.git`.
 
+On Windows, the parent preserves the original operator's inherited **Modify**
+access on the newly created, empty fixture directory before placing any files.
+Only that exact user SID and generated root are affected; no broad group or
+recursive ACL reset is used. This avoids a fixture-specific ownership trap:
+Python's [`TemporaryDirectory`](https://github.com/python/cpython/blob/v3.12.10/Lib/tempfile.py#L886)
+uses [`mkdir(0o700)`](https://github.com/python/cpython/blob/v3.12.10/Lib/tempfile.py#L384),
+whose [Windows ACL](https://github.com/python/cpython/blob/v3.12.10/Modules/posixmodule.c#L5363)
+grants inherited owner-relative rights. A sandbox user creating a file becomes
+its owner, so the original operator can otherwise lose read access. The study
+records this provisioning in `fixture.json`; it does not change Codex's writable
+roots, protected Git metadata, network policy, or global configuration.
+
 ## Tasks and comparisons
 
 | Task | Controlled condition | What is measured |
@@ -70,8 +82,20 @@ Codex runs with `--ignore-user-config`, `--ephemeral`, `--json` and the
 `workspace-write` sandbox. On Windows, a process-only
 `-c windows.sandbox="elevated"` selects the existing native sandbox setup:
 ignoring user configuration otherwise drops that platform setting. This does
-not change the user configuration or relax filesystem/network permissions.
+not relax filesystem/network permissions.
 See the [Windows sandbox documentation](https://learn.chatgpt.com/docs/windows/windows-sandbox).
+
+Codex 0.153.4 can [persist project trust when starting a writable thread](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/app-server/src/request_processors/thread_processor.rs#L1334),
+even with `--ephemeral --ignore-user-config`. The runner therefore supplies an
+inline `projects` TOML value defining trust only for the freshly generated
+fixture, through a process override. It records SHA-256 fingerprints of the
+Codex user configuration before and after each run; configuration contents are
+never exported. A changed fingerprint after a phase prevents subsequent host
+sessions in that run. The flag construction is tested, and a separate model-free
+configuration readback must confirm exact fixture resolution before live use.
+Earlier diagnostic batches predate this correction and retain their observed
+automatic configuration side effects in their notes.
+
 Claude uses project settings, an explicit tool list,
 `acceptEdits`, strict MCP configuration and no session persistence. The runner
 does not bypass hook trust or sandboxing. Managed host policies and host-provided
@@ -85,7 +109,9 @@ Flags were checked against installed CLI help on 2026-09-08. See the official
 Each fresh output directory contains:
 
 - `run.json`: requested model, host version, OS/Python/Trailbun versions, argv,
-  exit status, elapsed time, original acceptance result and changed paths.
+  exit status, elapsed time, original acceptance result and changed paths. New
+  runs also retain before/after package-source hashes and Codex configuration
+  fingerprints; missing observations in older receipts remain unknown.
 - `fixture.json`: original files, their combined SHA-256 and seeded failures.
 - `phase-N-prompt.txt`, `phase-N-stdout.jsonl`, `phase-N-stderr.txt`: the exact
   prompts and host streams after redaction.

@@ -67,6 +67,10 @@ def test_host_commands_use_fresh_sessions_without_trust_or_sandbox_bypass(tmp_pa
     assert '--ignore-user-config' in codex and '--ephemeral' in codex
     assert codex[codex.index('--sandbox') + 1] == 'workspace-write'
     assert ('windows.sandbox="elevated"' in codex) == (study.os.name == 'nt')
+    import tomllib
+    project_overrides = [value for value in codex if value.startswith('projects=')]
+    assert len(project_overrides) == 1
+    assert tomllib.loads(project_overrides[0]) == {'projects': {str(tmp_path): {'trust_level': 'trusted'}}}
     claude = study.host_command('claude', 'explicit-model', tmp_path, 'claude')
     assert claude[claude.index('--setting-sources') + 1] == 'project'
     assert '--strict-mcp-config' in claude
@@ -104,10 +108,13 @@ def test_export_redacts_local_roots_and_known_secret_values(tmp_path, monkeypatc
     source = str(Path(study.__file__).resolve().parents[1])
     for escaped_layers in range(5):
         assert study.redact(source.replace('\\', '\\' * (2 ** escaped_layers)), tmp_path) == '<TRAILBUN_SOURCE>'
+    if study.os.name == 'nt':
+        quoted_source = source.replace('\\', "'\\\"" + '\\' * 4)
+        assert study.redact(quoted_source, tmp_path) == '<TRAILBUN_SOURCE>'
 
 
 def test_summary_preserves_missing_cells_and_missing_usage(tmp_path):
-    from benchmarks.summarize import summarize
+    from benchmarks.summarize import markdown, summarize
 
     folder = tmp_path / 'codex-scope-plain-1'
     folder.mkdir()
@@ -115,14 +122,89 @@ def test_summary_preserves_missing_cells_and_missing_usage(tmp_path):
               'status': 'completed', 'requested_model': 'chosen-model',
               'phases': [{'duration_seconds': 2, 'exit_code': 0, 'timed_out': False,
                           'telemetry': {'usage': [], 'reported_models': [], 'reported_cost_usd': []}}],
-              'score': {'task_success': False, 'acceptance_passed': False}}
+              'artifact_export_error': 'PermissionError reading a new file',
+              'score': {'task_success': False, 'acceptance_passed': True}}
     (folder / 'run.json').write_text(json.dumps(report))
     (folder / 'phase-1-stderr.txt').write_text('rejected: blocked by policy')
     result = summarize(tmp_path)
     assert result['recorded_runs'] == 1 and result['missing_runs'] == 23
     assert result['policy_blocked_runs'] == 1
+    assert result['runs_with_runner_or_export_errors'] == 1
     assert result['reported_usage_totals'] == {}
     assert result['reported_cost_usd'] is None
     assert result['reported_models'] == []
     assert result['rows'][12]['host_process_status'] == 'completed'
     assert result['rows'][12]['task_success'] is False
+    assert '| pass | fail |' in markdown(result)
+
+
+def test_artifact_export_records_unreadable_file_without_losing_readable_files(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    root, output = tmp_path / 'fixture', tmp_path / 'output'
+    prepared = study.prepare(root, 'scope', 'plain')
+    (root / 'DIAGNOSIS.md').write_text('An extra sandbox-owned artifact.\n')
+    output.mkdir()
+    original_read = Path.read_text
+
+    def read_text(path, *args, **kwargs):
+        if path == root / 'DIAGNOSIS.md':
+            raise PermissionError('simulated sandbox-created-file ACL')
+        return original_read(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, 'read_text', read_text)
+    study._export_artifact(root, output, prepared)
+    artifact = json.loads((output / 'artifact-files.json').read_text())
+    assert artifact['DIAGNOSIS.md']['retained'] is False
+    assert 'PermissionError' in artifact['DIAGNOSIS.md']['reason']
+    assert artifact['app/routes.py']['retained'] is True
+
+
+def test_fixture_owner_access_is_prepared_only_on_new_empty_root(tmp_path, monkeypatch):
+    root = tmp_path / 'fixture'
+    observed = []
+
+    def grant(location):
+        observed.append((location, list(location.iterdir())))
+
+    monkeypatch.setattr(store, '_grant_bootstrap_user', grant)
+    prepared = study.prepare(root, 'scope', 'plain')
+    assert observed[0] == (root, [])
+    assert prepared['fixture_owner_access'] == 'creator-only inherited Modify on Windows; no-op on POSIX'
+    assert all(location.is_relative_to(root) for location, _ in observed)
+    observed.clear()
+    with pytest.raises(FileExistsError):
+        study.prepare(root, 'scope', 'plain')
+    assert observed == []
+
+
+def test_config_fingerprint_never_exports_config_content(tmp_path):
+    config = tmp_path / 'config.toml'
+    assert study.config_fingerprint(config) == {'status': 'missing', 'sha256': None}
+    config.write_text('private_value = "never-export-this-value"\n')
+    fingerprint = study.config_fingerprint(config)
+    assert fingerprint['status'] == 'read' and len(fingerprint['sha256']) == 64
+    assert 'never-export' not in json.dumps(fingerprint)
+
+
+def test_config_change_stops_before_second_host_session(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    fingerprints = iter([{'status': 'read', 'sha256': 'before'},
+                         {'status': 'read', 'sha256': 'after'},
+                         {'status': 'read', 'sha256': 'after'}])
+    calls = []
+
+    def fake_phase(command, prompt, root, timeout):
+        calls.append(prompt)
+        return {'argv': command, 'exit_code': 0, 'timed_out': False, 'duration_seconds': 0,
+                'stdout': '', 'stderr': '', 'telemetry': study.telemetry('')}
+
+    monkeypatch.setattr(study, 'config_fingerprint', lambda: next(fingerprints))
+    monkeypatch.setattr(study, '_resolve_host', lambda _: [study.sys.executable])
+    monkeypatch.setattr(study, '_phase', fake_phase)
+    report = study.run_study(SimpleNamespace(output=tmp_path / 'evidence', host='codex',
+        model='fake', task='resume', condition='plain', repeat=1, timeout_seconds=1))
+    assert len(calls) == 1
+    assert report['status'] == 'incomplete'
+    assert report['global_config_content_unchanged'] is False

@@ -36,6 +36,9 @@ def _acceptance(root, task):
 def prepare(root: Path, name: str, condition: str) -> dict:
     task = TASKS[name]
     root.mkdir(parents=True, exist_ok=False)
+    # Only this freshly created, empty fixture gets creator access preserved.
+    # Python's Windows tempfile parent uses owner-relative ACL inheritance.
+    store._grant_bootstrap_user(root)
     files = {**task['files'], '.gitignore': '__pycache__/\n*.pyc\n',
              'acceptance.py': task['acceptance']}
     for relative, content in files.items():
@@ -55,6 +58,7 @@ def prepare(root: Path, name: str, condition: str) -> dict:
                             'timeout_seconds': 15}]}
     (runtime / 'study-contract.json').write_text(json.dumps(contract, indent=2), encoding='utf-8')
     prepared = {'task': name, 'condition': condition, 'baseline': _git(root, 'rev-parse', 'HEAD'),
+                'fixture_owner_access': 'creator-only inherited Modify on Windows; no-op on POSIX',
                 'fixture_sha256': hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest(),
                 'initial_files': files, 'seeded_attempts': []}
     if name == 'recovery':
@@ -95,8 +99,11 @@ def host_command(host, model, root, binary):
     command = list(binary) if isinstance(binary, list) else [binary]
     if host == 'codex':
         windows = ['-c', 'windows.sandbox="elevated"'] if os.name == 'nt' else []
+        # An inline TOML value preserves the full path key. An already defined
+        # project trust level skips Codex thread-start's global auto-trust write.
+        project = ['-c', 'projects={' + json.dumps(str(root)) + '={trust_level="trusted"}}']
         return command + ['exec', '--ignore-user-config', '--ephemeral', '--json',
-                          '--sandbox', 'workspace-write', '--model', model, '-C', str(root)] + windows + ['-']
+                          '--sandbox', 'workspace-write', '--model', model, '-C', str(root)] + windows + project + ['-']
     tools = 'Read,Edit,Write,Bash'
     return command + ['-p', '--setting-sources', 'project', '--strict-mcp-config',
                       '--tools', tools, '--allowedTools', tools, '--permission-mode', 'acceptEdits',
@@ -195,6 +202,11 @@ def redact(text, root):
         variants = [value.replace('\\', '\\' * count) for count in (16, 8, 4, 2, 1)]
         for variant in variants + [value.replace('\\', '/')]:
             text = text.replace(variant, replacement)
+        # PowerShell may quote between the drive and separators inside a JSON string.
+        if '\\' in value:
+            separator = r'''[\\/"'`]+'''
+            pattern = separator.join(re.escape(part) for part in re.split(r'[\\/]', value))
+            text = re.sub(pattern, lambda _: replacement, text, flags=re.IGNORECASE)
     for name, value in os.environ.items():
         if len(value) >= 8 and re.search(r'TOKEN|SECRET|PASSWORD|API_KEY|CREDENTIAL', name, re.I):
             text = text.replace(value, '[REDACTED]')
@@ -235,13 +247,33 @@ def _export_artifact(root, output, prepared):
     files = {}
     for name in sorted(paths):
         path = root / name
-        if path.is_symlink() or not path.resolve().is_relative_to(root.resolve()):
-            files[name] = {'retained': False, 'reason': 'symlink or outside worktree'}
-        elif path.is_file() and path.stat().st_size <= 65536:
-            files[name] = {'retained': True, 'text': path.read_text(encoding='utf-8', errors='replace')}
-        else:
-            files[name] = {'retained': False, 'reason': 'missing or exceeds 64 KiB'}
+        try:
+            if path.is_symlink() or not path.resolve().is_relative_to(root.resolve()):
+                files[name] = {'retained': False, 'reason': 'symlink or outside worktree'}
+            elif path.is_file() and path.stat().st_size <= 65536:
+                files[name] = {'retained': True, 'text': path.read_text(encoding='utf-8', errors='replace')}
+            else:
+                files[name] = {'retained': False, 'reason': 'missing or exceeds 64 KiB'}
+        except OSError as exc:
+            files[name] = {'retained': False, 'reason': f'{type(exc).__name__}: {exc}'}
     _write(output / 'artifact-files.json', files, root)
+
+
+def source_hashes():
+    location = Path(engine.__file__).resolve().parent
+    return {path.relative_to(location).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(location.rglob('*.py'))}
+
+
+def config_fingerprint(path=None):
+    if path is None:
+        path = Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex'))) / 'config.toml'
+    try:
+        return {'status': 'read', 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+    except FileNotFoundError:
+        return {'status': 'missing', 'sha256': None}
+    except OSError as exc:
+        return {'status': 'error', 'sha256': None, 'error_type': type(exc).__name__}
 
 
 def run_study(args):
@@ -251,11 +283,16 @@ def run_study(args):
               'native_hooks_installed': False, 'host': args.host, 'requested_model': args.model,
               'task': args.task, 'condition': args.condition, 'repeat': args.repeat,
               'started_at': datetime.now(timezone.utc).isoformat(), 'phases': [],
+              'source_sha256_before': source_hashes(),
               'environment': {'trailbun': __version__, 'python': platform.python_version(), 'os': platform.platform()}}
     with tempfile.TemporaryDirectory(prefix='trailbun-study-') as temporary:
         root = Path(temporary) / 'worktree'
         prepared = None
         try:
+            if args.host == 'codex':
+                report['global_config_before'] = config_fingerprint()
+                if report['global_config_before']['status'] == 'error':
+                    raise RuntimeError('Cannot fingerprint Codex configuration before the run')
             binary = _resolve_host(args.host)
             version = subprocess.run(binary + ['--version'], capture_output=True, text=True, timeout=10)
             report['host_version'] = version.stdout.strip()
@@ -272,6 +309,11 @@ def run_study(args):
                     phase['production_edits_before_handoff'] = [name for name in git.changed_paths(root, prepared['baseline'])
                                                                  if name.startswith('app/')]
                 report['phases'].append(phase)
+                if args.host == 'codex':
+                    phase['global_config_after'] = config_fingerprint()
+                    if phase['global_config_after'] != report['global_config_before']:
+                        report['error'] = 'Codex configuration content changed; remaining host phases were not started'
+                        break
                 if phase['timed_out'] or phase['exit_code'] != 0:
                     break
             report['score'] = score(root, prepared)
@@ -280,7 +322,7 @@ def run_study(args):
             report['score']['task_success'] = (report['score']['task_success'] and
                 report['score']['inspection_phase_preserved_production'])
             report['model_wall_seconds'] = round(sum(phase['duration_seconds'] for phase in report['phases']), 3)
-            report['status'] = 'completed' if len(report['phases']) == TASKS[args.task]['phases'] and all(
+            report['status'] = 'completed' if not report.get('error') and len(report['phases']) == TASKS[args.task]['phases'] and all(
                 phase['exit_code'] == 0 and not phase['timed_out'] for phase in report['phases']) else 'incomplete'
             if args.condition == 'trailbun':
                 try:
@@ -302,6 +344,13 @@ def run_study(args):
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
             report['error'] = str(exc)
         finally:
+            if args.host == 'codex':
+                report['global_config_after'] = config_fingerprint()
+                report['global_config_content_unchanged'] = (
+                    report.get('global_config_before') == report['global_config_after']
+                    and report['global_config_after']['status'] != 'error')
+            report['source_sha256_after'] = source_hashes()
+            report['source_changed_during_run'] = report['source_sha256_before'] != report['source_sha256_after']
             if prepared:
                 try:
                     _export_artifact(root, output, prepared)

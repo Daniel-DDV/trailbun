@@ -40,6 +40,7 @@ def summarize(directory):
                         'timeout_count': sum(bool(phase['timed_out']) for phase in phases),
                         'model_wall_seconds': round(sum(phase['duration_seconds'] for phase in phases), 3),
                         'reported_usage': phase_usage, 'workflow_observed': report.get('workflow_observed'),
+                        'runner_or_export_errors': {key: report[key] for key in ('error', 'artifact_export_error') if report.get(key)},
                         'evidence': f'{name}/run.json'})
                     rows.append(row)
     recorded = [row for row in rows if row['recorded']]
@@ -50,6 +51,7 @@ def summarize(directory):
         'task_successes': sum(row['task_success'] is True for row in recorded),
         'policy_blocked_runs': sum(row['policy_block_messages'] > 0 for row in recorded),
         'timeouts': sum(row['timeout_count'] for row in recorded),
+        'runs_with_runner_or_export_errors': sum(bool(row['runner_or_export_errors']) for row in recorded),
         'model_wall_seconds_sum': round(sum(row['model_wall_seconds'] for row in recorded), 3),
         'requested_models': sorted(model for model in requested if model),
         'reported_models': sorted(models), 'reported_usage_totals': usage_totals,
@@ -65,22 +67,25 @@ def markdown(report):
         f"Recorded {report['recorded_runs']} of 24 runs ({report['recorded_phases']} host sessions); "
         f"{report['missing_runs']} runs are missing. Task success: {report['task_successes']} recorded runs. "
         f"Policy rejection messages occurred in {report['policy_blocked_runs']} runs. "
-        f"Timeouts: {report['timeouts']}.", '', report['interpretation'], '',
+        f"Timeouts: {report['timeouts']}. Runner or export errors: {report['runs_with_runner_or_export_errors']} runs.", '', report['interpretation'], '',
         'Requested models: ' + ', '.join(report['requested_models']) + '. '
         'Host-reported model IDs: ' + (', '.join(report['reported_models']) or 'not disclosed') + '.', '',
         f"Sum of session durations: {report['model_wall_seconds_sum']} s. "
         'Reported cost: ' + (str(report['reported_cost_usd']) if report['reported_cost_usd'] is not None else 'not disclosed') + '.', '',
         'Reported usage totals (fields retain the host names and may overlap):', '',
         '```json', json.dumps(report['reported_usage_totals'], indent=2), '```', '',
-        '| Cell | Process | Task acceptance | Policy rejection messages | Sessions | Seconds |',
-        '| --- | --- | --- | ---: | ---: | ---: |']
+        '| Cell | Process | Acceptance | Overall task | Extra paths | Runner/export error | Policy rejections | Sessions | Seconds |',
+        '| --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |']
     for row in report['rows']:
         if not row['recorded']:
-            lines.append(f"| {row['cell']} | not run | — | — | — | — |")
+            lines.append(f"| {row['cell']} | not run | — | — | — | — | — | — | — |")
         else:
             acceptance = {True: 'pass', False: 'fail', None: 'not scored'}[row['acceptance_passed']]
+            overall = {True: 'pass', False: 'fail', None: 'not scored'}[row['task_success']]
+            extra = ', '.join(row['out_of_scope_paths'] or []) or 'none'
+            error = 'yes; see receipt' if row['runner_or_export_errors'] else 'none'
             lines.append(f"| [{row['cell']}]({row['evidence']}) | {row['host_process_status']} | "
-                         f"{acceptance} | {row['policy_block_messages']} | {row['phase_count']} | {row['model_wall_seconds']} |")
+                         f"{acceptance} | {overall} | {extra} | {error} | {row['policy_block_messages']} | {row['phase_count']} | {row['model_wall_seconds']} |")
     return '\n'.join(lines) + '\n'
 
 

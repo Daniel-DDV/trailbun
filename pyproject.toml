@@ -11,6 +11,11 @@ license = "MIT"
 readme = "README.md"
 dependencies = ["filelock>=3.16,<4"]
 
+[project.urls]
+Repository = "https://github.com/Daniel-DDV/trailbun"
+Issues = "https://github.com/Daniel-DDV/trailbun/issues"
+Changelog = "https://github.com/Daniel-DDV/trailbun/blob/main/CHANGELOG.md"
+
 [project.scripts]
 trailbun = "trailbun.cli:main"
 
