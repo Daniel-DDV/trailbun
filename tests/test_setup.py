@@ -13,6 +13,7 @@ def project(tmp_path, monkeypatch):
     monkeypatch.setattr(integration, "_root", lambda root: Path(root))
     monkeypatch.setattr(integration, "_directory", lambda root: Path(root) / ".git" / "trailbun")
     monkeypatch.setattr(integration, "_version", lambda host: "fixture-1.0")
+    monkeypatch.setattr(integration, "_bootstrap", lambda root: None)
     return tmp_path
 
 
@@ -93,10 +94,11 @@ def test_denied_invocation_survives_a_later_allowed_tool(project):
     integration.setup(project, "codex")
     payload = {"hook_event_name": "PreToolUse", "session_id": "s1",
                "tool_name": "apply_patch", "tool_use_id": "call-one", "tool_input": {"command": "fixture"}}
-    integration.record_invocation(project, "codex", payload, {"hookSpecificOutput": {"permissionDecision": "deny"}})
+    integration.record_invocation(project, "codex", payload, {"hookSpecificOutput": {"permissionDecision": "deny", "permissionDecisionReason": "Trailbun scope violation: outside.txt"}})
     integration.record_invocation(project, "codex", {**payload, "tool_name": "Bash", "tool_use_id": "call-two"}, {})
     record = json.loads((integration._directory(project) / "denied-codex.json").read_text())
     assert record["tool_name"] == "apply_patch" and record["tool_use_id"] == "call-one"
+    assert record["reason"] == "Trailbun scope violation: outside.txt"
     assert len(record["input_fingerprint"]) == 64
     assert "command" not in record
 
@@ -154,3 +156,14 @@ def test_installed_command_reaches_real_cli_and_preserves_json_stdin(tmp_path, h
     assert result.returncode == 0, result.stderr
     response = json.loads(result.stdout)
     assert "native-fixture" in response["hookSpecificOutput"]["additionalContext"]
+
+
+def test_setup_bootstraps_owned_writable_runtime_before_installing(repo):
+    from trailbun import store
+    integration.setup(repo, "codex")
+    runtime = store.directory(repo)
+    assert runtime == repo / ".trailbun"
+    assert json.loads((runtime / "owner.json").read_text())["owner"] == "trailbun"
+    assert (runtime / "install-codex.json").exists()
+    ignored = subprocess.run(["git", "check-ignore", ".trailbun/owner.json"], cwd=repo, capture_output=True)
+    assert ignored.returncode == 0

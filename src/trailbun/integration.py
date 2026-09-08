@@ -27,6 +27,11 @@ def _directory(root):
     return store.directory(root)
 
 
+def _bootstrap(root):
+    from . import store
+    return store.bootstrap(root)
+
+
 def _digest(value):
     raw = value if isinstance(value, bytes) else json.dumps(value, sort_keys=True).encode()
     return hashlib.sha256(raw).hexdigest()
@@ -137,6 +142,7 @@ def setup(project: Path, host: str) -> dict:
               "config_existed": manifest["config_existed"] if manifest else target.exists(),
               "skills": {p: _digest(content) for p, content in templates.items()}}
     # Validate every destination before the first mutation.
+    _bootstrap(root)
     for relative, content in templates.items():
         _write(_inside(root, relative), content)
     _write(target, config)
@@ -209,6 +215,7 @@ def record_invocation(project, host, payload, result):
               "recorded_at": datetime.now(timezone.utc).isoformat(), "config_fingerprint": _digest(own_hooks),
               "tool_name": payload.get("tool_name"), "tool_use_id": payload.get("tool_use_id"),
               "input_fingerprint": _digest(payload.get("tool_input", {})),
+              "reason": str(result.get("hookSpecificOutput", {}).get("permissionDecisionReason", result.get("reason", "")))[:1200],
               "decision": result.get("hookSpecificOutput", {}).get("permissionDecision", result.get("decision"))}
     _write(_directory(root) / f"invoked-{host}-{event}.json", record)
     if event == "PreToolUse" and record["decision"] == "deny":
