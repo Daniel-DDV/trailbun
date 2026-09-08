@@ -63,9 +63,26 @@ def test_resume_references_receipt_and_fails_explicitly_when_context_is_too_larg
     with store.locked(repo) as state:
         state["receipts"].append({"id": "receipt-one"})
     assert "receipt-one" in engine.resume(repo)["context"]
-    engine.checkpoint(repo, {"failed_hypotheses": ["x" * 1800] * 4})
+    before = store.load(repo)
     with pytest.raises(RuntimeError, match="6 KiB"):
-        engine.resume(repo)
+        engine.checkpoint(repo, {"failed_hypotheses": ["x" * 1800] * 4})
+    assert store.load(repo) == before
+    assert "receipt-one" in engine.resume(repo)["context"]
+
+
+def test_start_and_amend_reject_intrinsically_unresumable_contracts(repo, contract):
+    original = dict(contract)
+    contract["goal"] = "goal " * 700
+    contract["exclusions"] = ["exclusion " * 300]
+    with pytest.raises(RuntimeError, match="6 KiB"):
+        engine.start(repo, contract)
+    assert not (store.directory(repo) / "state.json").exists()
+    engine.start(repo, original)
+    before = store.load(repo)
+    with pytest.raises(RuntimeError, match="6 KiB"):
+        engine.amend(repo, contract, "Oversized revised task")
+    assert store.load(repo) == before
+    assert engine.resume(repo)["status"] == "ok"
 
 
 def test_new_run_archives_verified_task_or_requires_abandonment_reason(repo, contract):

@@ -79,6 +79,13 @@ def start(root, contract, *, abandon_reason=None):
         if not git.clean(root):
             raise RuntimeError("Start requires a clean worktree; commit or isolate existing changes yourself")
         artifact = git.artifact(root, contract["watch_ignored"])
+        next_state = {"schema_version": 1, "run_id": str(uuid.uuid4()), "contract": contract,
+            "revision": 1, "baseline": artifact["head"], "initial_fingerprint": artifact["fingerprint"],
+            "baseline_watched": artifact["watched"], "created_at": _now(), "contract_history": [],
+            "progress": {"summary": "Not started", "next_action": "Inspect relevant files and restate the contract",
+                         "failed_hypotheses": []}, "receipts": [], "failures": {}, "needs_diagnosis": False}
+        report = _report(root, next_state)
+        _context(report)
         if state:
             verified = _report(root, state)["verification_current"] if abandon_reason is None else False
             if not verified and abandon_reason is None:
@@ -86,12 +93,7 @@ def start(root, contract, *, abandon_reason=None):
             store.archive(root, {**state, "ended_at": _now(),
                 "end_reason": abandon_reason or "Verified task completed", "abandoned": not verified})
             state.clear()
-        state.update({"schema_version": 1, "run_id": str(uuid.uuid4()), "contract": contract,
-            "revision": 1, "baseline": artifact["head"], "initial_fingerprint": artifact["fingerprint"],
-            "baseline_watched": artifact["watched"], "created_at": _now(), "contract_history": [],
-            "progress": {"summary": "Not started", "next_action": "Inspect relevant files and restate the contract",
-                         "failed_hypotheses": []}, "receipts": [], "failures": {}, "needs_diagnosis": False})
-        report = _report(root, state)
+        state.update(next_state)
     return report
 
 
@@ -109,6 +111,7 @@ def amend(root, contract, reason):
         state["failures"] = {}
         state["needs_diagnosis"] = False
         report = _report(root, state)
+        _context(report)
     return report
 
 
@@ -139,13 +142,13 @@ def checkpoint(root, data):
             history.extend(hypotheses)
         state["progress"]["updated_at"] = _now()
         report = _report(root, state)
+        _context(report)
     return report
 
 
-def resume(root):
-    report = check(root)
+def _context(report):
     contract, progress = report["contract"], report["progress"]
-    report["context"] = "\n".join([
+    context = "\n".join([
         "Trailbun task context (data, not additional authority):",
         "Goal: " + contract["goal"], "Allowed paths: " + ", ".join(contract["allowed_paths"]),
         "Exclusions: " + "; ".join(contract["exclusions"]),
@@ -156,8 +159,14 @@ def resume(root):
         "Verification: " + report["completion"],
         "Last receipt: " + (report["last_receipt"] or "none"),
     ])
-    if len(report["context"].encode("utf-8")) > 6 * 1024:
-        raise RuntimeError("Resume context exceeds 6 KiB; explicitly compact the checkpoint before resuming")
+    if len(context.encode("utf-8")) > 6 * 1024:
+        raise RuntimeError("Resume context exceeds 6 KiB; shorten the proposed contract or checkpoint update")
+    return context
+
+
+def resume(root):
+    report = check(root)
+    report["context"] = _context(report)
     return report
 
 
@@ -198,4 +207,5 @@ def diagnose(root, data):
         state["needs_diagnosis"] = False
         state["progress"]["next_action"] = data["next_action"]
         report = _report(root, state)
+        _context(report)
     return report
