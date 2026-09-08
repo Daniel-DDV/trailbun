@@ -1,6 +1,8 @@
 import csv
+import json
 import os
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -211,22 +213,56 @@ def test_runtime_bootstrap_is_owned_ignored_and_idempotent(repo, contract):
     engine.start(repo, contract)
 
 
+def _windows_acl_rules(path=None, *, sddl=""):
+    # Resolve SDDL aliases through Windows, never by account-name/RID heuristics.
+    # https://learn.microsoft.com/dotnet/api/system.security.accesscontrol.commonobjectsecurity.getaccessrules
+    script = """
+$ErrorActionPreference = 'Stop'
+if ($env:TRAILBUN_TEST_ACL_SDDL) {
+    $acl = New-Object System.Security.AccessControl.DirectorySecurity
+    $acl.SetSecurityDescriptorSddlForm($env:TRAILBUN_TEST_ACL_SDDL)
+} elseif ([System.IO.Directory]::Exists($env:TRAILBUN_TEST_ACL_PATH)) {
+    $acl = [System.IO.Directory]::GetAccessControl($env:TRAILBUN_TEST_ACL_PATH)
+} else {
+    $acl = [System.IO.File]::GetAccessControl($env:TRAILBUN_TEST_ACL_PATH)
+}
+$rules = @($acl.GetAccessRules($true, $true, [System.Security.Principal.SecurityIdentifier]) | ForEach-Object {
+    @{ sid = $_.IdentityReference.Value; rights = [int]$_.FileSystemRights;
+       inheritance = [int]$_.InheritanceFlags; propagation = [int]$_.PropagationFlags;
+       inherited = $_.IsInherited; type = [int]$_.AccessControlType }
+})
+ConvertTo-Json -InputObject $rules -Compress
+"""
+    powershell = Path(os.environ["SystemRoot"]) / "System32/WindowsPowerShell/v1.0/powershell.exe"
+    result = subprocess.run([str(powershell), "-NoProfile", "-NonInteractive", "-Command", script],
+                            env={**os.environ, "TRAILBUN_TEST_ACL_PATH": str(path or ""),
+                                 "TRAILBUN_TEST_ACL_SDDL": sddl},
+                            check=True, capture_output=True, text=True, timeout=15)
+    return json.loads(result.stdout)
+
+
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
-def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, tmp_path):
+def test_native_acl_resolution_accepts_local_administrator_alias():
+    aliased = _windows_acl_rules(sddl="D:(A;OICI;0x1301bf;;;LA)")
+    assert len(aliased) == 1
+    sid = aliased[0]["sid"]
+    assert sid != "LA"
+    assert aliased == _windows_acl_rules(sddl=f"D:(A;OICI;0x1301bf;;;{sid})")
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
+def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo):
     result = subprocess.run(["whoami.exe", "/user", "/fo", "csv", "/nh"],
                             check=True, capture_output=True, text=True)
     sid = next(csv.reader(result.stdout.splitlines()))[1]
     location = store.bootstrap(repo)
-    acl = tmp_path / "directory-acl.txt"
-    subprocess.run(["icacls.exe", str(location), "/save", str(acl), "/q"],
-                   check=True, capture_output=True)
-    assert f"(A;OICI;0x1301bf;;;{sid})" in acl.read_text(encoding="utf-16-le")
+    expected = {"sid": sid, "rights": 0x1301BF, "inheritance": 3,
+                "propagation": 0, "inherited": False, "type": 0}
+    assert expected in _windows_acl_rules(location)
     path = location / "state.json"
     store._write(path, {"schema_version": 1, "revision": 1})
     store._write(path, {"schema_version": 1, "revision": 2})
-    subprocess.run(["icacls.exe", str(path), "/save", str(acl), "/q"],
-                   check=True, capture_output=True)
-    assert f"(A;ID;0x1301bf;;;{sid})" in acl.read_text(encoding="utf-16-le")
+    assert {**expected, "inheritance": 0, "inherited": True} in _windows_acl_rules(path)
     assert store.load(repo)["revision"] == 2
 
 
