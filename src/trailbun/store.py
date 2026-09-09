@@ -16,6 +16,8 @@ from . import git
 
 OWNER = {"schema_version": 1, "owner": "trailbun"}
 IGNORE_RULE = b"/.trailbun/"
+BLOCK_BEGIN = b"# Trailbun runtime begin"
+BLOCK_END = b"# Trailbun runtime end"
 
 
 def _grant_bootstrap_user(location):
@@ -60,28 +62,74 @@ def directory(root):
                 raise ValueError("unknown owner marker")
         except (OSError, ValueError) as exc:
             raise RuntimeError("Trailbun runtime ownership conflict: preserve existing .trailbun contents") from exc
-    if any(git.runtime_name(name) for name in git._names(git.run(root, "ls-files", "-z"))):
+    # Only the runtime prefix is listed; a full ls-files on every call scales with the repository.
+    if any(git.runtime_name(name) for name in git._names(git.run(root, "ls-files", "-z", "--", ".trailbun"))):
         raise RuntimeError("Trailbun runtime is tracked; remove it from the index before using task state")
     return location
+
+
+def has_task(root):
+    """True when a state file exists, without creating the runtime or touching Git's exclude file."""
+    return (git.repo_root(root) / ".trailbun" / "state.json").is_file()
+
+
+def _exclude_file(root):
+    exclude = _git_path(root, "info/exclude")
+    common = Path(os.fsdecode(git.run(root, "rev-parse", "--git-common-dir").rstrip(b"\r\n")))
+    common = (root / common).resolve() if not common.is_absolute() else common.resolve()
+    if not exclude.is_relative_to(common):
+        raise RuntimeError("Refusing to change an exclude file outside this repository's Git metadata")
+    return exclude
+
+
+def _block_lines(original):
+    """Return (before, block_lines, after) for the owned block, creating an empty block when absent."""
+    lines = original.split(b"\n")
+    if lines and lines[-1] == b"":
+        lines.pop()
+    stripped = [line.strip() for line in lines]
+    if BLOCK_BEGIN in stripped and BLOCK_END in stripped[stripped.index(BLOCK_BEGIN):]:
+        start = stripped.index(BLOCK_BEGIN)
+        end = stripped.index(BLOCK_END, start)
+        return lines[:start], lines[start + 1:end], lines[end + 1:]
+    return lines, [], []
+
+
+def _write_block(exclude, before, block, after):
+    exclude.parent.mkdir(parents=True, exist_ok=True)
+    content = before + [BLOCK_BEGIN] + block + [BLOCK_END] + after
+    with exclude.open("wb") as output:
+        output.write(b"\n".join(content) + b"\n")
+
+
+def exclude_paths(root, names, *, remove=False):
+    """Add or remove exact repository-relative entries inside the Trailbun block of .git/info/exclude.
+
+    Entries are anchored with a leading slash so they match only the generated file.
+    """
+    root = git.repo_root(root)
+    exclude = _exclude_file(root)
+    original = exclude.read_bytes() if exclude.exists() else b""
+    before, block, after = _block_lines(original)
+    entries = [b"/" + os.fsencode(str(name).replace("\\", "/").lstrip("/")) for name in names]
+    current = [line.strip() for line in block]
+    if remove:
+        block = [line for line in block if line.strip() not in entries]
+    else:
+        block = block + [entry for entry in entries if entry not in current]
+    if IGNORE_RULE not in [line.strip() for line in block] and not remove:
+        block = [IGNORE_RULE] + block
+    if [line.strip() for line in block] != current or BLOCK_BEGIN not in original:
+        _write_block(exclude, before, block, after)
+    return [entry.decode("utf-8", "replace") for entry in block]
 
 
 def bootstrap(root):
     """Initialize ownership and an exact local ignore before entering a native sandbox."""
     root = git.repo_root(root)
     location = directory(root)
-    exclude = _git_path(root, "info/exclude")
-    common = Path(os.fsdecode(git.run(root, "rev-parse", "--git-common-dir").rstrip(b"\r\n")))
-    common = (root / common).resolve() if not common.is_absolute() else common.resolve()
-    if not exclude.is_relative_to(common):
-        raise RuntimeError("Refusing to change an exclude file outside this repository's Git metadata")
     try:
-        original = exclude.read_bytes() if exclude.exists() else b""
-        if IGNORE_RULE not in (line.strip() for line in original.splitlines()):
-            exclude.parent.mkdir(parents=True, exist_ok=True)
-            block = (b"" if not original or original.endswith(b"\n") else b"\n")
-            block += b"# Trailbun runtime begin\n" + IGNORE_RULE + b"\n# Trailbun runtime end\n"
-            with exclude.open("ab") as output:
-                output.write(block)
+        exclude_paths(root, [])
         if not git.is_ignored(root, ".trailbun/owner.json"):
             raise RuntimeError("A conflicting ignore rule exposes .trailbun; correct it outside the native sandbox")
         if not location.exists():
@@ -121,7 +169,7 @@ def load(root):
 def _write(path, state):
     data = json.dumps(state, indent=2, ensure_ascii=True) + "\n"
     if len(data.encode()) > 1024 * 1024:
-        raise RuntimeError("Trailbun state exceeds the 1 MiB limit; archive older receipts")
+        raise RuntimeError("Trailbun state exceeds the 1 MiB limit; start a reviewed follow-up task")
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
@@ -138,14 +186,20 @@ def _write(path, state):
 
 def archive(root, state):
     """Archive a completed or explicitly abandoned run while holding its state lock."""
-    identifier = str(uuid.UUID(state["run_id"]))
+    try:
+        identifier = str(uuid.UUID(state["run_id"]))
+    except (KeyError, TypeError, ValueError):
+        identifier = "unreadable-" + uuid.uuid4().hex
     location = directory(root) / "archive"
     location.mkdir(parents=True, exist_ok=True)
     _write(location / (identifier + ".json"), state)
 
 
 @contextmanager
-def locked(root):
+def locked(root, *, existing=False):
+    """Hold the state lock. With existing=True, refuse before bootstrapping when no task exists."""
+    if existing and not has_task(root):
+        raise RuntimeError("No active Trailbun task in this worktree; run trailbun start")
     location = bootstrap(root)
     path = location / "state.json"
     try:

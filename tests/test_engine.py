@@ -71,7 +71,7 @@ def test_resume_references_receipt_and_fails_explicitly_when_context_is_too_larg
     assert "receipt-one" in engine.resume(repo)["context"]
     before = store.load(repo)
     with pytest.raises(RuntimeError, match="6 KiB"):
-        engine.checkpoint(repo, {"failed_hypotheses": ["x" * 1800] * 4})
+        engine.checkpoint(repo, {"failed_hypotheses": [f"{index}" + "x" * 1800 for index in range(4)]})
     assert store.load(repo) == before
     assert "receipt-one" in engine.resume(repo)["context"]
 
@@ -169,7 +169,7 @@ def test_diagnosis_accepts_retained_receipt_and_resets_documented_failure_budget
     receipt = store.directory(repo) / "retained-receipt.json"
     receipt.write_text('{"status":"violation"}', encoding="utf-8")
     with store.locked(repo) as state:
-        state["receipts"].append({"id": "one", "path": str(receipt)})
+        state["receipts"].append({"id": "one", "path": str(receipt), "status": "violation"})
         state["failures"] = {"acceptance": {"count": 2, "fingerprints": ["first", "second"]}}
         state["needs_diagnosis"] = True
     data = {"reproduction": "Run acceptance", "cause": "Branch condition is wrong",

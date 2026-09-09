@@ -2,17 +2,22 @@
 
 from pathlib import Path
 
+# Claude Code documents file_path for Edit and Write and notebook_path for NotebookEdit
+# (https://code.claude.com/docs/en/permissions, checked 2026-09-09). Codex documents
+# apply_patch (https://learn.chatgpt.com/docs/hooks, checked 2026-09-09).
+PATH_FIELDS = {"Edit": "file_path", "Write": "file_path", "NotebookEdit": "notebook_path"}
+
 
 def tool_paths(tool: str, arguments: dict) -> list[str] | None:
-    """Extract only documented Edit/Write and apply_patch file targets."""
-    if tool not in {"Edit", "Write", "apply_patch"}:
+    """Extract only documented Edit/Write/NotebookEdit and apply_patch file targets."""
+    if tool not in {*PATH_FIELDS, "apply_patch"}:
         return None
     if not isinstance(arguments, dict):
         raise ValueError("Known edit tool has invalid arguments")
-    if tool in {"Edit", "Write"}:
-        path = arguments.get("file_path")
+    if tool in PATH_FIELDS:
+        path = arguments.get(PATH_FIELDS[tool])
         if not isinstance(path, str) or not path.strip() or "\x00" in path:
-            raise ValueError("Known edit tool has no valid file_path")
+            raise ValueError(f"Known edit tool has no valid {PATH_FIELDS[tool]}")
         return [path]
     patch = arguments.get("command")
     if not isinstance(patch, str):
@@ -57,9 +62,14 @@ def _root(root):
     return git.repo_root(root)
 
 
-def _allowed(root, path, allowed):
+def _allowed(root, path, allowed, metadata=None):
     from . import git
-    return git.path_allowed(git.repo_root(root), path, allowed)
+    return git.path_allowed(git.repo_root(root), path, allowed, metadata)
+
+
+def _git_dir(root):
+    from . import git
+    return git.git_dir(root)
 
 
 def _assess(root):
@@ -72,12 +82,17 @@ def _record(root, host, payload, result):
     integration.record_invocation(root, host, payload, result)
 
 
+def _config_drift(root, host):
+    from . import integration
+    return integration.config_drift(root, host)
+
+
 def bind(root: Path, host: str, session_id: str) -> None:
     """Bind only on explicit start/resume; directory presence is insufficient."""
     from . import store
     if host not in {"claude", "codex"} or not session_id or len(session_id) > 256:
         raise ValueError("A supported host and valid session ID are required")
-    with store.locked(root) as state:
+    with store.locked(root, existing=True) as state:
         state.setdefault("bindings", {})[f"{host}:{session_id}"] = state["run_id"]
 
 
@@ -97,6 +112,48 @@ def error_response(host: str, event: str, reason: str) -> dict:
     return {"systemMessage": f"Trailbun hook unavailable; task not verified: {reason[:500]}"}
 
 
+def _amendment_note(report):
+    count = report.get("amend_count", 0)
+    note = f"Contract revision {report.get('revision')}, amended {count} times since start"
+    if report.get("last_amend_reason"):
+        note += f", last reason: {report['last_amend_reason'][:200]}"
+    return note + " (recorded, not enforced)."
+
+
+def _stop_reason(root, host, report):
+    reason = ("Trailbun task remains incomplete: refresh verification evidence and resolve scope or "
+              "diagnosis findings. Do not claim completion without current passing evidence. ")
+    reason += _amendment_note(report)
+    if report.get("last_receipt"):
+        digest = (report.get("last_receipt_sha256") or "")[:16]
+        reason += f" Latest receipt {report['last_receipt'][:12]} ({report.get('last_receipt_status')}"
+        reason += f", sha256 {digest})." if digest else ")."
+    try:
+        drift = _config_drift(root, host)
+    except (OSError, RuntimeError, ValueError) as exc:
+        drift = [f"hook configuration could not be compared: {str(exc)[:200]}"]
+    if drift:
+        reason += " Hook configuration differs from the installation manifest: " + "; ".join(drift)[:600] + "."
+    return reason
+
+
+def _stop(root, host, payload):
+    try:
+        report = _assess(root)
+    except RuntimeError as exc:
+        # Inspection failed (for example a rewritten baseline). Say so once instead of a silent warning.
+        reason = f"Trailbun cannot inspect the task: {str(exc)[:900]}"
+        if payload.get("stop_hook_active"):
+            return {"systemMessage": reason}
+        return {"decision": "block", "reason": reason}
+    if report.get("verification_current") and not report.get("outside_allowed_paths") and not report.get("needs_diagnosis"):
+        return {}
+    reason = _stop_reason(root, host, report)
+    if payload.get("stop_hook_active"):
+        return {"systemMessage": reason}
+    return {"decision": "block", "reason": reason}
+
+
 def _handle(root, host, payload):
     if host not in {"claude", "codex"} or not isinstance(payload, dict):
         raise ValueError("Unsupported host or invalid hook input")
@@ -111,8 +168,12 @@ def _handle(root, host, payload):
             from . import engine
             report = engine.resume(root)
             return _context(event, report.get("context", str(report.get("contract", {}))))
+        import sys
         task = "A recoverable task exists." if state else "No task is active."
-        return _context(event, f"Trailbun: {task} Session binding: --host {host} --session {session}. Use trailbun start or resume explicitly to activate guards for this session.")
+        command = f'"{sys.executable}" -m trailbun resume --host {host} --session {session}'
+        return _context(event, f"Trailbun: {task} Session binding: --host {host} --session {session}. "
+                        f"Run `{command}` (or trailbun start with the same flags) explicitly to activate guards for this session. "
+                        "Any command that changes the contract is recorded with a reason; it is not blocked.")
     if not bound:
         return {}
     if event == "PreToolUse":
@@ -125,23 +186,21 @@ def _handle(root, host, payload):
         if state.get("needs_diagnosis"):
             return _deny("Trailbun: repeated corrective failures require trailbun diagnose before another supported edit.")
         cwd = Path(payload.get("cwd", root))
-        outside = [p for p in paths if not _allowed(root, str(Path(p) if Path(p).is_absolute() else cwd / p), state["contract"]["allowed_paths"])]
+        metadata = _git_dir(root)
+        outside = [p for p in paths if not _allowed(root, str(Path(p) if Path(p).is_absolute() else cwd / p), state["contract"]["allowed_paths"], metadata)]
         if outside:
             return _deny("Trailbun scope violation: " + ", ".join(outside)[:1000])
     if event in {"PostToolUse", "PostToolUseFailure"}:
-        report = _assess(root)
+        try:
+            report = _assess(root)
+        except RuntimeError as exc:
+            return {"systemMessage": f"Trailbun cannot inspect the task: {str(exc)[:500]}"}
         if report.get("outside_allowed_paths"):
             return _context(event, "Trailbun detected workspace drift outside the task scope: " + ", ".join(report["outside_allowed_paths"]) + ". The operation already ran; inspect the changes.")
         if report.get("needs_diagnosis"):
             return _context(event, "Trailbun: run trailbun diagnose before the next supported edit.")
     if event == "Stop":
-        report = _assess(root)
-        if report.get("verification_current") and not report.get("outside_allowed_paths") and not report.get("needs_diagnosis"):
-            return {}
-        reason = "Trailbun task remains incomplete: refresh verification evidence and resolve scope or diagnosis findings. Do not claim completion without current passing evidence."
-        if payload.get("stop_hook_active"):
-            return {"systemMessage": reason}
-        return {"decision": "block", "reason": reason}
+        return _stop(root, host, payload)
     return {}
 
 
