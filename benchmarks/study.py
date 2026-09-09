@@ -14,7 +14,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
 
 from benchmarks.tasks import TASKS
@@ -206,7 +206,7 @@ def redact(text, root):
         if '\\' in value:
             separator = r'''[\\/"'`]+'''
             pattern = separator.join(re.escape(part) for part in re.split(r'[\\/]', value))
-            text = re.sub(pattern, lambda _: replacement, text, flags=re.IGNORECASE)
+            text = re.sub(pattern, lambda _, marker=replacement: marker, text, flags=re.IGNORECASE)
     for name, value in os.environ.items():
         if len(value) >= 8 and re.search(r'TOKEN|SECRET|PASSWORD|API_KEY|CREDENTIAL', name, re.I):
             text = text.replace(value, '[REDACTED]')
@@ -282,7 +282,7 @@ def run_study(args):
     report = {'schema_version': 1, 'status': 'incomplete', 'kind': 'controlled-core-workflow-study',
               'native_hooks_installed': False, 'host': args.host, 'requested_model': args.model,
               'task': args.task, 'condition': args.condition, 'repeat': args.repeat,
-              'started_at': datetime.now(timezone.utc).isoformat(), 'phases': [],
+              'started_at': datetime.now(UTC).isoformat(), 'phases': [],
               'source_sha256_before': source_hashes(),
               'environment': {'trailbun': __version__, 'python': platform.python_version(), 'os': platform.platform()}}
     with tempfile.TemporaryDirectory(prefix='trailbun-study-') as temporary:

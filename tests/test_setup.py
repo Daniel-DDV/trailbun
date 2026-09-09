@@ -9,15 +9,17 @@ from trailbun import integration
 
 
 @pytest.fixture
-def project(tmp_path, monkeypatch):
-    monkeypatch.setattr(integration, "_root", lambda root: Path(root))
-    monkeypatch.setattr(integration, "_directory", lambda root: Path(root) / ".git" / "trailbun")
+def project(repo, tmp_path, monkeypatch):
+    """A real Git repository and a fake home directory, so no user settings file leaks into doctor."""
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("USERPROFILE", str(home))
     monkeypatch.setattr(integration, "_version", lambda host: "fixture-1.0")
-    monkeypatch.setattr(integration, "_bootstrap", lambda root: None)
-    return tmp_path
+    return repo
 
 
-@pytest.mark.parametrize("host,relative", [("claude", ".claude/settings.json"), ("codex", ".codex/hooks.json")])
+@pytest.mark.parametrize("host,relative", [("claude", ".claude/settings.local.json"), ("codex", ".codex/hooks.json")])
 def test_setup_is_idempotent_preserves_config_and_uninstalls_only_own_entries(project, host, relative):
     target = project / relative
     target.parent.mkdir(parents=True)
@@ -41,7 +43,7 @@ def test_setup_does_not_overwrite_existing_skill(project):
     with pytest.raises(ValueError, match="conflict"):
         integration.setup(project, "claude")
     assert target.read_text() == "User-owned skill"
-    assert not (project / ".claude/settings.json").exists()
+    assert not (project / ".claude/settings.local.json").exists()
 
 
 def test_uninstall_preserves_modified_owned_skill(project):
@@ -69,13 +71,27 @@ def test_uninstall_conflict_can_be_restored_and_retried(project):
 def test_doctor_reports_disabled_claude_hooks_after_previous_invocation(project):
     integration.setup(project, "claude")
     integration.record_invocation(project, "claude", {"hook_event_name": "SessionStart", "session_id": "s1"}, {})
-    target = project / ".claude/settings.json"
+    target = project / ".claude/settings.local.json"
     config = json.loads(target.read_text())
     config["disableAllHooks"] = True
     target.write_text(json.dumps(config))
     report = integration.doctor(project, "claude")
     assert report["status"] == "incomplete"
     assert report["disabled"] is True
+    assert report["disabled_by"].startswith("local:")
+
+
+def test_doctor_reads_user_and_project_disable_flags_with_local_precedence(project):
+    integration.setup(project, "claude")
+    user = Path(os.environ["USERPROFILE"]) / ".claude" / "settings.json"
+    user.parent.mkdir(parents=True)
+    user.write_text('{"disableAllHooks": true}', encoding="utf-8")
+    assert integration.doctor(project, "claude")["disabled_by"].startswith("user:")
+    (project / ".claude/settings.json").write_text('{"disableAllHooks": false}', encoding="utf-8")
+    assert integration.doctor(project, "claude")["disabled"] is False
+    (project / ".claude/settings.json").write_text('{"disableAllHooks": true}', encoding="utf-8")
+    assert integration.doctor(project, "claude")["disabled_by"].startswith("project:")
+    assert any("disableAllHooks" in item for item in integration.config_drift(project, "claude"))
 
 
 def test_doctor_does_not_equate_configuration_or_invocation_with_enforcement(project):
@@ -123,8 +139,8 @@ def test_preexisting_identical_unowned_hook_is_not_duplicated(project):
 
 
 def test_corrupt_installation_manifest_reports_an_actionable_error(project):
-    manifest = integration._directory(project) / "install-codex.json"
-    manifest.parent.mkdir(parents=True)
+    from trailbun import store
+    manifest = store.bootstrap(project) / "install-codex.json"
     manifest.write_text('{"schema_version": 1}', encoding="utf-8")
     with pytest.raises(ValueError, match="manifest"):
         integration.doctor(project, "codex")

@@ -47,7 +47,7 @@ as a complete record of work already committed since task start. Trailbun
 therefore retains the task's original base commit and includes relevant
 working-tree and index state. Untracked files need their own enumeration;
 standard exclude rules also affect ignored files. Path handling and rename
-coverage need executable fixtures, not assumptions about a convenient glob.
+coverage need executable fixtures. Assumptions about a convenient glob are not enough.
 [git diff](https://git-scm.com/docs/git-diff), [git ls-files](https://git-scm.com/docs/git-ls-files)
 
 A passing receipt must describe the artifact actually checked. Changing files,

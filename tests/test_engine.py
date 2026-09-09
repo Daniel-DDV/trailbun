@@ -71,7 +71,7 @@ def test_resume_references_receipt_and_fails_explicitly_when_context_is_too_larg
     assert "receipt-one" in engine.resume(repo)["context"]
     before = store.load(repo)
     with pytest.raises(RuntimeError, match="6 KiB"):
-        engine.checkpoint(repo, {"failed_hypotheses": ["x" * 1800] * 4})
+        engine.checkpoint(repo, {"failed_hypotheses": [f"{index}" + "x" * 1800 for index in range(4)]})
     assert store.load(repo) == before
     assert "receipt-one" in engine.resume(repo)["context"]
 
@@ -169,7 +169,7 @@ def test_diagnosis_accepts_retained_receipt_and_resets_documented_failure_budget
     receipt = store.directory(repo) / "retained-receipt.json"
     receipt.write_text('{"status":"violation"}', encoding="utf-8")
     with store.locked(repo) as state:
-        state["receipts"].append({"id": "one", "path": str(receipt)})
+        state["receipts"].append({"id": "one", "path": str(receipt), "status": "violation"})
         state["failures"] = {"acceptance": {"count": 2, "fingerprints": ["first", "second"]}}
         state["needs_diagnosis"] = True
     data = {"reproduction": "Run acceptance", "cause": "Branch condition is wrong",
@@ -237,10 +237,11 @@ ConvertTo-Json -InputObject $rules -Compress
     result = subprocess.run([str(powershell), "-NoProfile", "-NonInteractive", "-Command", script],
                             env={**os.environ, "TRAILBUN_TEST_ACL_PATH": str(path or ""),
                                  "TRAILBUN_TEST_ACL_SDDL": sddl},
-                            check=True, capture_output=True, text=True, timeout=15)
+                            check=True, capture_output=True, text=True, timeout=60)
     return json.loads(result.stdout)
 
 
+@pytest.mark.windows_acl
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
 def test_native_acl_resolution_accepts_local_administrator_alias():
     aliased = _windows_acl_rules(sddl="D:(A;OICI;0x1301bf;;;LA)")
@@ -286,6 +287,7 @@ def _unrelated_acl_preserved(before, after, sid):
                for rule in remaining)
 
 
+@pytest.mark.windows_acl
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL resolution")
 def test_native_acl_accepts_observed_ci_allow_copies():
     # Observed in Actions job 102265420281; Win11 may retain only inherited ACEs.
@@ -320,6 +322,7 @@ def test_acl_duplicate_exception_never_masks_deny_changes_or_order():
     assert not _unrelated_acl_preserved([operator_deny, allow], [allow], "operator")
 
 
+@pytest.mark.windows_acl
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL inheritance")
 @pytest.mark.parametrize("preexisting_full_control", [False, True])
 def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, monkeypatch, preexisting_full_control):
@@ -332,7 +335,7 @@ def test_runtime_keeps_explicit_operator_access_after_atomic_replace(repo, monke
         if preexisting_full_control:
             icacls = Path(os.environ["SystemRoot"]) / "System32/icacls.exe"
             subprocess.run([str(icacls), str(location), "/grant", f"*{sid}:(OI)(CI)F", "/q"],
-                           check=True, capture_output=True, timeout=15)
+                           check=True, capture_output=True, timeout=60)
         before.extend(_windows_acl_rules(location))
         original_grant(location)
     monkeypatch.setattr(store, "_grant_bootstrap_user", record_initial_acl)
@@ -374,6 +377,7 @@ def test_runtime_does_not_grant_new_user_access_on_later_bootstrap(repo, monkeyp
     store.bootstrap(repo)
 
 
+@pytest.mark.windows_acl
 @pytest.mark.skipif(os.name != "nt", reason="Windows ACL bootstrap")
 def test_failed_acl_provisioning_leaves_no_owned_runtime(repo, monkeypatch):
     def denied(_location):
@@ -398,7 +402,7 @@ def test_unowned_runtime_conflict_leaves_user_files_and_excludes_untouched(repo)
 
 
 def test_tracked_runtime_is_rejected_even_with_an_owner_marker(repo):
-    location = store.bootstrap(repo)
+    store.bootstrap(repo)
     git_command(repo, "add", "-f", ".trailbun/owner.json")
     with pytest.raises(RuntimeError, match="tracked"):
         store.bootstrap(repo)

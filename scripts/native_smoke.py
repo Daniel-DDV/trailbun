@@ -15,7 +15,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -169,7 +169,7 @@ def reassess(report_path, output):
     }
     result = {"schema_version": 1, "status": "ok" if all(checks.values()) else "incomplete",
         "original_status": report["status"], "original_report": report_path.name, "original_report_sha256": sha(report_path),
-        "reassessed_at": datetime.now(timezone.utc).isoformat(), "checks": checks,
+        "reassessed_at": datetime.now(UTC).isoformat(), "checks": checks,
         "reason": "Codex PreToolUse denial returns before the patch handler emits file_change events. Its native router error, exact patch fingerprint, bound hook receipt and external file checks establish the rejected write.",
         "verifier": "scripts/native_smoke.py --reassess", "verifier_sha256": sha(Path(__file__)),
         "native_router_denials": native_denials, "limits": report["limits"],
@@ -277,7 +277,7 @@ After those two attempts, stop and report observed success, rejection or failure
         stream.write(redact(stderr, root))
     with script_path.open("xb") as stream:
         stream.write(script_bytes)
-    report = {"schema_version": 1, "status": "ok" if passed else "incomplete", "measured_at": datetime.now(timezone.utc).isoformat(),
+    report = {"schema_version": 1, "status": "ok" if passed else "incomplete", "measured_at": datetime.now(UTC).isoformat(),
         "host": "codex", "host_version": version, "requested_model": args.model, "platform": platform.platform(), "trailbun_version": __version__,
         "fixture": str(root), "fixture_setup": "Generated project-local hooks and skills committed before clean task start",
         "trust_mode": "Reviewed one-off hook trust bypass plus exact-fixture project trust override", "argv": argv,

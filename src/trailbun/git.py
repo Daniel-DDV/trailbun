@@ -10,14 +10,36 @@ from pathlib import Path
 from . import contracts
 
 
+def executable(name):
+    """Resolve a program through PATH and PATHEXT only, never the working directory.
+
+    Windows CreateProcess searches the parent's current directory before PATH when
+    the name carries no directory. Returning an absolute path removes that lookup.
+    """
+    if os.path.dirname(name):
+        return name
+    extensions = [""]
+    if os.name == "nt":
+        extensions += [ext for ext in os.environ.get("PATHEXT", ".COM;.EXE;.BAT;.CMD").split(os.pathsep) if ext]
+    for entry in os.environ.get("PATH", "").split(os.pathsep):
+        if not entry:
+            continue
+        for extension in extensions:
+            candidate = Path(entry) / (name + extension)
+            if candidate.is_file() and os.access(candidate, os.X_OK):
+                return str(candidate)
+    raise OSError(f"Cannot find {name!r} on PATH")
+
+
 def run(root, *args, allowed_codes=(0,), input_data=None):
     try:
-        result = subprocess.run(["git", "--no-optional-locks", "-C", str(root), *args],
+        result = subprocess.run([executable("git"), "--no-optional-locks", "-C", str(root), *args],
                                 capture_output=True, timeout=15, input=input_data)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise RuntimeError(f"Git inspection failed: {exc}") from exc
     if result.returncode not in allowed_codes:
-        raise RuntimeError(result.stderr.decode("utf-8", "replace").strip() or "Git inspection failed")
+        detail = result.stderr.decode("utf-8", "replace").strip()
+        raise RuntimeError(detail or f"Git inspection failed: git {args[0]} exited with {result.returncode}")
     return result.stdout
 
 
@@ -29,12 +51,49 @@ def head(root):
     return run(root, "rev-parse", "--verify", "HEAD").decode().strip()
 
 
+def is_ancestor(root, baseline):
+    """True when the recorded baseline is reachable from HEAD; False when Git says it is not."""
+    result = subprocess.run([executable("git"), "--no-optional-locks", "-C", str(root), "merge-base",
+                             "--is-ancestor", baseline, "HEAD"], capture_output=True, timeout=15)
+    if result.returncode == 0:
+        return True
+    if result.returncode == 1:
+        return False
+    detail = result.stderr.decode("utf-8", "replace").strip()
+    if "not a valid commit" in detail.lower() or "bad revision" in detail.lower():
+        return False
+    raise RuntimeError(detail or "Git inspection failed: merge-base")
+
+
+def baseline_error(baseline):
+    return (f"Baseline {baseline[:12]} is not an ancestor of HEAD. The recorded commit was amended, rebased, "
+            "reset away or left behind by a branch switch. Run trailbun amend --contract <file> --reason \"...\" "
+            "--rebaseline to record HEAD as the new baseline, or trailbun start --contract <file> "
+            "--abandon-reason \"...\" to archive this task.")
+
+
 def require_baseline(root, baseline):
-    run(root, "merge-base", "--is-ancestor", baseline, "HEAD")
+    if not is_ancestor(root, baseline):
+        raise RuntimeError(baseline_error(baseline))
+
+
+def dirty_paths(root):
+    records = run(root, "status", "--porcelain=v1", "-z", "--untracked-files=all").split(b"\0")
+    names = []
+    skip = False
+    for record in records:
+        if skip:  # The second record of a rename is the original name.
+            skip = False
+            continue
+        if not record:
+            continue
+        names.append(os.fsdecode(record[3:]))
+        skip = record[:1] in (b"R", b"C")
+    return names
 
 
 def clean(root):
-    return not run(root, "status", "--porcelain=v1", "-z", "--untracked-files=all")
+    return not dirty_paths(root)
 
 
 def is_ignored(root, name):
@@ -88,7 +147,17 @@ def _scope_matches(value, scope):
     return scope == "." or value == scope or value.startswith(scope.rstrip("/") + "/")
 
 
-def path_allowed(root, value, allowed_paths):
+HOST_CONFIG_PATHS = (".claude/settings.json", ".claude/settings.local.json", ".codex/hooks.json",
+                     ".codex/config.toml", ".claude/skills/trailbun-start", ".claude/skills/trailbun-resume",
+                     ".claude/skills/trailbun-diagnose", ".agents/skills/trailbun-start",
+                     ".agents/skills/trailbun-resume", ".agents/skills/trailbun-diagnose")
+
+
+def git_dir(root):
+    return Path(os.fsdecode(run(root, "rev-parse", "--absolute-git-dir").rstrip(b"\r\n"))).resolve()
+
+
+def path_allowed(root, value, allowed_paths, metadata=None):
     root = Path(root).resolve()
     try:
         supplied = Path(value)
@@ -100,7 +169,13 @@ def path_allowed(root, value, allowed_paths):
         matching = [contracts.path(scope) for scope in allowed_paths if _scope_matches(relative, scope)]
         if not matching:
             return False
-        metadata = Path(os.fsdecode(run(root, "rev-parse", "--absolute-git-dir").rstrip(b"\r\n"))).resolve()
+        # Host hook and skill files are denied under a broad scope unless an allowed path names them exactly.
+        protected = [item for item in HOST_CONFIG_PATHS if _scope_matches(relative, item)]
+        if protected and not any(os.path.normcase(scope) == os.path.normcase(item)
+                                 for scope in matching for item in protected):
+            return False
+        if metadata is None:
+            metadata = git_dir(root)
         runtime = (root / ".trailbun").resolve()
         if target == metadata or target.is_relative_to(metadata) or target == runtime or target.is_relative_to(runtime):
             return False
@@ -155,4 +230,7 @@ def artifact(root, watch_ignored=()):
     files = {name: _file_digest(root, name) for name in sorted(paths) if not runtime_name(name)}
     result = {"head": head(root), "index": hashlib.sha256(index).hexdigest(), "files": files, "watched": watched}
     result["fingerprint"] = hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
+    # Contents only: staging or committing the same bytes must not count as a new corrective attempt.
+    content = {"files": files, "watched": watched}
+    result["content_fingerprint"] = hashlib.sha256(json.dumps(content, sort_keys=True, ensure_ascii=True).encode()).hexdigest()
     return result

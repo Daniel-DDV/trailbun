@@ -6,7 +6,7 @@ fixed baseline, and intervenes only on tested native tool paths. Success means a
 working Python distribution, deterministic regression coverage, real host
 receipts, a reproducible demo and honest measured results. It is not a sandbox.
 
-Brand: **Trailbun — Keep your agent on the trail.** English throughout.
+Brand: **Trailbun. Keep your agent on the trail.** English throughout.
 
 ## Delivery order
 

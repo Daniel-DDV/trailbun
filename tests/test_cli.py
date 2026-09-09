@@ -2,6 +2,8 @@ import json
 import subprocess
 import sys
 
+from trailbun import __version__
+
 
 def run(*args):
     return subprocess.run([sys.executable, '-m', 'trailbun', *args], capture_output=True, text=True)
@@ -10,7 +12,7 @@ def run(*args):
 def test_version():
     result = run('--version')
     assert result.returncode == 0
-    assert '0.2.0' in result.stdout
+    assert __version__ in result.stdout
 
 
 def test_invalid_contract_is_structured_incomplete(tmp_path):

@@ -36,8 +36,11 @@ def bound(monkeypatch):
     monkeypatch.setattr(hooks, "_load", lambda root: state)
     monkeypatch.setattr(hooks, "_root", lambda root: Path(root))
     monkeypatch.setattr(hooks, "_record", lambda *args: None)
-    monkeypatch.setattr(hooks, "_allowed", lambda root, path, allowed: path.startswith("src/"))
-    monkeypatch.setattr(hooks, "_assess", lambda root: {"verification_current": False, "outside_allowed_paths": [], "needs_diagnosis": False})
+    monkeypatch.setattr(hooks, "_allowed", lambda root, path, allowed, metadata=None: path.startswith("src/"))
+    monkeypatch.setattr(hooks, "_git_dir", lambda root: None)
+    monkeypatch.setattr(hooks, "_config_drift", lambda root, host: [])
+    monkeypatch.setattr(hooks, "_assess", lambda root: {"verification_current": False, "outside_allowed_paths": [], "needs_diagnosis": False,
+                                                        "revision": 1, "amend_count": 0})
     return state
 
 
@@ -81,7 +84,7 @@ def test_receipt_write_failure_does_not_discard_a_scope_denial(bound, monkeypatc
 
 def test_relative_targets_follow_event_working_directory(bound, monkeypatch, tmp_path):
     captured = []
-    monkeypatch.setattr(hooks, "_allowed", lambda root, path, allowed: captured.append(path) or True)
+    monkeypatch.setattr(hooks, "_allowed", lambda root, path, allowed, metadata=None: captured.append(path) or True)
     hooks.handle(tmp_path, "codex", event("PreToolUse", cwd=str(tmp_path / "subdir"), tool_name="apply_patch", tool_input={"command": "*** Begin Patch\n*** Add File: result.py\n+x\n*** End Patch"}))
     assert Path(captured[0]) == tmp_path / "subdir" / "result.py"
 
