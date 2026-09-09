@@ -6,6 +6,10 @@
 
 # Trailbun
 
+[![CI](https://github.com/Daniel-DDV/trailbun/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Daniel-DDV/trailbun/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/trailbun?include_prereleases)](https://pypi.org/project/trailbun/)
+[![Python](https://img.shields.io/pypi/pyversions/trailbun)](https://pypi.org/project/trailbun/)
+
 **Keep your agent on the trail.** Task contracts, scope checks and verification
 receipts for coding agents on Codex and Claude Code.
 
