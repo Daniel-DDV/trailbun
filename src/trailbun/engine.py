@@ -15,7 +15,7 @@ HOST_ENV_PREFIXES = ("CLAUDECODE", "CLAUDE_CODE_", "CODEX_")
 
 
 def _now():
-    return dt.datetime.now(dt.timezone.utc).isoformat()
+    return dt.datetime.now(dt.UTC).isoformat()
 
 
 def actor():

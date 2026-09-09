@@ -15,13 +15,13 @@ import tempfile
 import threading
 import time
 import tomllib
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.native_smoke import command, sha, source_hashes, user_config_snapshot
 from benchmarks.study import _resolve_host, redact
-from trailbun import engine, integration, store
+from trailbun import __version__, engine, integration, store
 
 
 def context_restored(events, thread, expected):
@@ -139,8 +139,9 @@ def main():
     thread = session = None
     started = time.monotonic()
     try:
-        request("initialize", {"clientInfo": {"name": "trailbun-compaction-probe", "version": "0.2.0"}, "capabilities": {"experimentalApi": True}})
-        process.stdin.write('{"method":"initialized"}\n'); process.stdin.flush()
+        request("initialize", {"clientInfo": {"name": "trailbun-compaction-probe", "version": __version__}, "capabilities": {"experimentalApi": True}})
+        process.stdin.write('{"method":"initialized"}\n')
+        process.stdin.flush()
         effective = request("config/read", {"cwd": str(root), "includeLayers": True})
         flags = next(layer["config"] for layer in effective["layers"] if layer["name"]["type"] == "sessionFlags")
         if flags.get("projects") != {str(root): {"trust_level": "trusted"}}:
@@ -194,7 +195,7 @@ def main():
     with script_path.open("xb") as stream:
         stream.write(script_bytes)
     report = {"schema_version": 1, "status": "ok" if all(checks.values()) else "incomplete", "checks": checks,
-        "measured_at": datetime.now(timezone.utc).isoformat(), "host_version": version, "requested_model": "gpt-6-astra",
+        "measured_at": datetime.now(UTC).isoformat(), "host_version": version, "requested_model": "gpt-6-astra",
         "fixture": str(root), "thread_id": thread, "session_id": session, "canonical_context": canonical,
         "user_config_before": config_before, "user_config_after": after, "sources_before": sources_before, "sources_after": sources_after,
         "elapsed_seconds": round(time.monotonic() - started, 3), "errors": errors, "stderr": "".join(stderr),

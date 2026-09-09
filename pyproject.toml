@@ -4,31 +4,58 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trailbun"
-version = "0.2.0"
-description = "Keep your agent on the trail: task checkpoints, drift checks, and recovery"
+dynamic = ["version"]
+description = "Keep your agent on the trail: task contracts, scope checks and verification receipts for coding agents"
 requires-python = ">=3.11,<3.15"
 license = "MIT"
 readme = "README.md"
 dependencies = ["filelock>=3.16,<4"]
+keywords = ["claude-code", "codex", "coding-agents", "hooks", "git", "verification"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Quality Assurance",
+]
 
 [project.urls]
 Repository = "https://github.com/Daniel-DDV/trailbun"
 Issues = "https://github.com/Daniel-DDV/trailbun/issues"
 Changelog = "https://github.com/Daniel-DDV/trailbun/blob/main/CHANGELOG.md"
+Evidence = "https://github.com/Daniel-DDV/trailbun/blob/main/docs/EVIDENCE.md"
 
 [project.scripts]
 trailbun = "trailbun.cli:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "trailbun.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-trailbun = ["resources/**/*", "skills/*/SKILL.md"]
+trailbun = ["skills/*/SKILL.md"]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<9"]
+test = ["pytest>=8,<9", "pytest-cov>=6,<8", "ruff>=0.12,<1"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q -p no:cacheprovider"
 pythonpath = ["src", "."]
+markers = ["windows_acl: PowerShell-backed Windows ACL checks; run in the dedicated CI job"]
+
+[tool.coverage.run]
+source = ["trailbun"]
+
+[tool.ruff]
+line-length = 140
+extend-exclude = ["evidence"]
+target-version = "py311"
+src = ["src", "tests", "scripts", "benchmarks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP"]
+ignore = ["E501"]

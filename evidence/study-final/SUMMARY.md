@@ -2,7 +2,7 @@
 
 All 12 recorded runs passed functional acceptance. The overall artifact score below is 9/12: three plain runs added `DIAGNOSIS.md` outside the predefined artifact set. The generic plain workflow instructions mention that file, so this difference is sensitive to prompt wording and does not establish better engineering or reduced drift. Read the [methodology and limitations](NOTES.md) before comparing conditions.
 
-Recorded 12 of 24 runs (16 host sessions); 12 runs are missing. Task success: 9 recorded runs. Policy rejection messages occurred in 0 runs. Timeouts: 0. Runner or export errors: 0 runs.
+Recorded 12 of 24 runs (16 host sessions); 12 runs are missing. Acceptance and exact artifact set: 9 of 12 recorded runs. Policy rejection messages occurred in 0 runs. Timeouts: 0. Runner or export errors: 0 runs.
 
 Diagnostic outcomes only; no efficacy estimate. Missing model/cost is unknown. Process completion is separate from acceptance. Summed session times are not elapsed experiment time when tasks run concurrently.
 

@@ -65,7 +65,7 @@ def summarize(directory):
 def markdown(report):
     lines = ['# Controlled study results', '',
         f"Recorded {report['recorded_runs']} of 24 runs ({report['recorded_phases']} host sessions); "
-        f"{report['missing_runs']} runs are missing. Task success: {report['task_successes']} recorded runs. "
+        f"{report['missing_runs']} runs are missing. Acceptance and exact artifact set: {report['task_successes']} of {report['recorded_runs']} recorded runs. "
         f"Policy rejection messages occurred in {report['policy_blocked_runs']} runs. "
         f"Timeouts: {report['timeouts']}. Runner or export errors: {report['runs_with_runner_or_export_errors']} runs.", '', report['interpretation'], '',
         'Requested models: ' + ', '.join(report['requested_models']) + '. '

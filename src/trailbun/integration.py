@@ -8,7 +8,7 @@ import shlex
 import subprocess
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from importlib.resources import files
 from pathlib import Path
 
@@ -228,7 +228,7 @@ def setup(project: Path, host: str, shared: bool = False) -> dict:
               "skills": {p: _digest(content) for p, content in templates.items()},
               "generated_paths": sorted(generated), "permissions_deny": deny,
               "matchers": MATCHERS.get(host, {}), "hook_timeout_seconds": HOOK_TIMEOUT,
-              "installed_at": datetime.now(timezone.utc).isoformat()}
+              "installed_at": datetime.now(UTC).isoformat()}
     # Validate every destination before the first mutation.
     _bootstrap(root)
     for relative, content in templates.items():
@@ -329,7 +329,7 @@ def record_invocation(project, host, payload, result):
         return
     own_hooks = _manifest(manifest, host)["hooks"]
     record = {"schema_version": 1, "event": event, "session_id": payload.get("session_id"),
-              "recorded_at": datetime.now(timezone.utc).isoformat(), "config_fingerprint": _digest(own_hooks),
+              "recorded_at": datetime.now(UTC).isoformat(), "config_fingerprint": _digest(own_hooks),
               "state_sha256": _state_digest(root),
               "tool_name": payload.get("tool_name"), "tool_use_id": payload.get("tool_use_id"),
               "input_fingerprint": _digest(payload.get("tool_input", {})),

@@ -1,80 +1,114 @@
-# Trailbun launch copy
+# Trailbun launch notes
 
-Prepared copy, not a record of messages sent. Use after the release command works
-from a clean environment and the linked [evidence](EVIDENCE.md) is published.
-Read the actual results before adding any performance claim.
+Prepared copy and sequence, not a record of messages sent. Every sentence
+describes shipped behavior or is marked as pending. Plain sentences, no
+em-dashes, no contrast constructions, no three-beat slogans, no hype
+adjectives, no emoji.
+
+## Gate
+
+Before any post: `main` is green, the 0.2.1 pre-release is on PyPI so that
+`uvx trailbun demo` works from a clean directory, the README shows the router
+line and the status box, the social preview is uploaded, and the Claude Code
+probe has run and its receipts are published. Until the probe runs, nothing
+below claims Claude Code support.
+
+## Tagline and description
+
+Brand line: **Keep your agent on the trail.**
+
+Sub-line under the h1: "Task contracts, scope checks and verification receipts
+for coding agents. Live receipt on Codex 0.153.4 (Windows); the Claude Code
+adapter has fixtures and no live receipt yet."
+
+Repository description: "Keep your agent on the trail. Task contracts, scope
+checks and verification receipts for Codex and Claude Code hooks."
+
+Topics: `claude-code-hooks`, `codex-cli`, `coding-agents`, `agent-skills`,
+`hooks`, `git`, `cli`, `python`.
+
+## Shareable asset
+
+One session only, never a composite:
+
+```text
+apply_patch
+*** Update File: protected/outside.txt
+-TRAILBUN_SENTINEL_UNCHANGED
++TRAILBUN_SENTINEL_CHANGED
+ERROR codex_core::tools::router: Command blocked by PreToolUse hook:
+Trailbun scope violation: protected/outside.txt
+agent: The protected patch was rejected by the PreToolUse hook. No verification run; task remains incomplete.
+```
+
+Caption: "Codex 0.153.4, Windows 11, apply_patch. The session ended incomplete
+by design; the attempted patch, hook receipt and unchanged file hash are in the
+repo." Plum background, chartreuse for the violation line.
+
+Second asset for reach: the rabbit-in-the-hole cartoon captioned "Three failed
+fixes later." A Claude variant only after the Claude probe.
 
 ## Short announcement
 
-Your agent started with a bug fix. It is now designing a framework.
+Your agent started with a small bug. Three failed fixes later it is building a
+framework, and the original task has scrolled out of its context.
 
-I built **Trailbun** to keep the original task in view: compact checkpoints,
-Git scope checks, evidence tied to the current files, and a fresh start when
-another speculative patch is not helping.
-
-It has a slightly tired rabbit. It also has a demo you can run:
+I built Trailbun to keep the task outside the conversation: a contract with
+the goal, the allowed paths and the acceptance checks; a scope check against
+the Git commit the task started from; and a verification receipt that goes
+stale the moment any checked file changes. On Codex it returns a native deny
+for an out-of-scope patch, with the receipt in the repo.
 
 ```sh
-uvx --from git+https://github.com/Daniel-DDV/trailbun@v0.2.0 trailbun demo
+uvx trailbun demo
 ```
 
-That demo exercises a real temporary Git repository. It is a deterministic
-demonstration, not an AI benchmark. Native coverage and measurements are reported
-separately, with receipts and the gaps left visible.
+The demo runs in a temporary Git repository with no model. Native coverage and
+measurements are reported separately, with receipts and the gaps left visible.
 
-**Trailbun — Keep your agent on the trail.**
+## Show HN
 
-[Repository](https://github.com/Daniel-DDV/trailbun)
+Title: "Show HN: Trailbun, a Git-checked task contract for coding agents"
 
-## Show HN draft
+First paragraph: "I kept watching the same failure: an agent takes a small bug,
+fails to fix it twice, and starts building a framework. By then the original
+task has scrolled out of its context. Trailbun writes the task down outside
+the conversation (goal, allowed paths, acceptance commands), diffs every change
+against the Git commit the task started from, including work already
+committed, and uses the host hook protocol to deny writes outside those paths:
+apply_patch on Codex 0.153.4 has a retained live receipt; Edit and Write on
+Claude Code pass adapter fixtures only. A passing verification is bound to a
+hash of the checked files, so any later edit makes it stale and the Stop hook
+asks for a rerun once. It checks file scope only; it cannot tell whether a
+change is what you meant, and shell or MCP writes are only seen afterwards. I
+would like reproductions where it got in the way or where a valid task needed
+a wider scope."
 
-Title: **Show HN: Trailbun — checkpoints and drift checks for AI coding agents**
+Self-posted first comment: the six limits from the README's "What it does not
+do" section and a request for reproductions with the issue template.
 
-I kept seeing the same failure: an agent had a reasonable plan, hit a difficult
-bug, and gradually started solving a larger, different problem.
+## Sequence
 
-Trailbun stores a small task contract outside the conversation and compares the
-actual artifact with the baseline from task start. That includes already
-committed work. It can restore a compact handoff and makes passing verification
-stale when the checked files or contract change. A repeated correction needs
-new evidence, not just a third variation of the same patch.
+- Days 3 to 4: one post on X and LinkedIn with the single-session card and
+  `uvx trailbun demo`; submission issues on hesreallyhim/awesome-claude-code
+  and the main awesome-codex list.
+- Day 5 (Tuesday to Thursday, morning US Eastern): Show HN with the first
+  comment above.
+- Days 5 to 7: answer every comment with a receipt link.
+- Days 8 to 10: r/ClaudeAI and r/ChatGPTCoding with the failure story as the
+  title; a two-line note to two or three people who cover hooks.
+- Days 11 to 14: publish the first external failure receipt received.
 
-The README has a local demo, project-local setup for Claude Code and Codex, and
-an evidence register that distinguishes core tests from actual host behavior.
-It is not a sandbox, and file-scope checks cannot prove semantic alignment.
+## Never claim
 
-I would particularly value small reproductions where the intervention was
-unhelpful or where a valid task needed a wider scope. Those are useful inputs
-for the next version.
+Any percentage. "Prevents context rot." "Sandbox" or "secure." "Works with
+Claude Code" before a live receipt. "Enforced" for shell or MCP paths.
+"Faster" or "cheaper."
 
-## Release description
+## Comparative context (fetched 2026-09-09)
 
-Trailbun 0.2.0 turns the original evidence-first field manual into a task
-continuity tool: contracts, checkpoints, baseline-aware artifact checks,
-verification receipts and bounded diagnosis. It adds explicit project-local
-Claude Code and Codex integration, an isolated demonstration and the Trailbun
-rabbit identity.
-
-On Windows with Codex 0.153.4, retained native receipts confirm a permitted
-patch, a rejected out-of-scope patch and restored checkpoint context after
-manual compaction. All twelve controlled Codex runs pass their functional
-checks; the [study's prompt-sensitive artifact score](../evidence/study-final/SUMMARY.md)
-does not establish an effectiveness advantage.
-
-This first preview leaves live Claude behavior and automatic compaction
-unverified. The twelve Claude study cells could not run without authentication.
-See the [validation and receipts](EVIDENCE.md) and the
-[0.2.0 release](https://github.com/Daniel-DDV/trailbun/releases/tag/v0.2.0).
-
-## Assets and follow-through
-
-- Pair the announcement with [social-preview.png](../assets/social-preview.png).
-- Pair the first technical follow-up with the real recorded demo and its JSON.
-- Publish one complete failure receipt before asking others to contribute one.
-- Report corrections as clearly as improvements; retain the earlier claim and
-  explain what the better measurement changed.
-- Use the published repo URL consistently after the rename.
-
-Assess distribution with observable results: visits to the repository, demo
-reproductions reported by users, actionable issues and returning contributors.
-Stars are a useful secondary signal; the project makes no promise of virality.
+Repositories with a recognizable example in the first screen, a one-command
+install in the host's idiom and a distribution surface reach readers that
+Trailbun does not yet. Trailbun has what they lack: a retained receipt of a
+host refusing a write, a study matrix showing unrun cells, and a tested CLI
+with cross-platform CI. The launch leads with the receipt.

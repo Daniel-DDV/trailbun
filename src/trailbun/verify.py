@@ -10,7 +10,7 @@ import re
 import subprocess
 import tempfile
 import time
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
 from uuid import uuid4
 
@@ -141,7 +141,7 @@ def verify(root: Path, baseline: bool = False) -> dict:
                    'artifact_after': {k: after[k] for k in ('head', 'index', 'fingerprint')} if after else None,
                    'changed_during_checks': changed_during,
                    'file_count': len(before['files']), 'status': status, 'checks': checks,
-                   'baseline': baseline, 'timestamp': datetime.now(timezone.utc).isoformat(),
+                   'baseline': baseline, 'timestamp': datetime.now(UTC).isoformat(),
                    'environment': {'trailbun': __version__, 'python': platform.python_version(),
                                    'platform': platform.platform()}}
         if inspection_error:
