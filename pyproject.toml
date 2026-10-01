@@ -9,7 +9,7 @@ description = "Keep your agent on the trail: task contracts, scope checks and ve
 requires-python = ">=3.11,<3.15"
 license = "MIT"
 readme = "README.md"
-dependencies = ["filelock>=3.16,<4"]
+dependencies = ["filelock>=3.16,<5"]
 keywords = ["claude-code", "codex", "coding-agents", "hooks", "git", "verification"]
 classifiers = [
   "Development Status :: 3 - Alpha",
